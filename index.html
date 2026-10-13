@@ -64,7 +64,7 @@ body.host .dex button{font-size:.8em}
 .opt.sel{border-color:var(--red-ink);color:var(--red-ink);background:color-mix(in srgb,var(--red) 30%,#fff);font-weight:700}
 .lever{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;border-radius:10px;padding:8px 10px;gap:10px}
 .lever.m{background:color-mix(in srgb,var(--red) 40%,#fff)}.lever.it{background:color-mix(in srgb,var(--blue) 40%,#fff)}.lever.e{background:color-mix(in srgb,var(--green) 50%,#fff)}
-.lever div{min-width:0}.lever small{display:block;color:var(--muted);font-size:11px;line-height:1.4}
+.lever div{min-width:0}
 .stp{display:flex;align-items:center;gap:6px;flex:none}
 .stp button{flex:none;width:36px;height:36px;padding:0;font-size:18px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:700;cursor:pointer}
 .stp b{font:400 18px var(--pixel);width:14px;text-align:center}
@@ -108,14 +108,16 @@ body.host .g{font-size:.75em}body.host .g b{font-size:1.2em}
 .role{display:flex;gap:8px;align-items:baseline;font-weight:700;line-height:1.5}
 .tag{flex:none;background:var(--lav);border-radius:999px;padding:1px 9px;font-size:.8em;font-weight:700}
 .scbody{display:grid;gap:12px}
-body.host .scbody{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
-@media (max-width:900px){body.host .scbody{grid-template-columns:minmax(0,1fr)}}
+body.host .flist{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:900px){body.host .flist{grid-template-columns:repeat(2,minmax(0,1fr))}}
+body.host .flist .vk,body.host .flist .vw{display:block}
+body.host .flist .vk{font-size:1.05em;font-weight:900;color:var(--ink);letter-spacing:.05em;margin-bottom:2px}
 .sl{font-size:.78em;font-weight:700;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
 .scard p.story{margin:0 0 6px;color:var(--ink);font-size:1em;line-height:1.75}
 .scard .flist{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:.95em;line-height:1.55}
 .flist li{background:rgba(255,255,255,.75);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
 .ask b{color:var(--red-ink)}
-.flist li.m{border-left:5px solid var(--red)}.flist li.it{border-left:5px solid var(--blue)}.flist li.e{border-left:5px solid var(--green)}
+.flist li.m{border-left:5px solid var(--red)}.flist li.it{border-left:5px solid var(--blue)}.flist li.e{border-left:5px solid var(--green)}.flist li.ban{border-left:5px solid #c3c8d3}
 .flist .vk{font-size:.75em;font-weight:700;color:var(--muted);margin-right:6px}.flist .vw{margin-right:2px}
 .flist small{display:block;color:var(--muted);font-size:.85em;margin-top:2px}
 .ask{background:color-mix(in srgb,var(--yellow) 55%,#fff);border-radius:10px;padding:8px 12px;font-weight:700}
@@ -129,7 +131,6 @@ body.host .scbody{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
 .phone .levers{grid-template-columns:minmax(0,1fr);gap:6px}.phone .lv{font-size:13px}
 ol.flow{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:3px;line-height:1.6}
 .phone ol.flow{font-size:13px}
-.phone .lever small{font-size:12px}
 /* answer bars */
 .ans{display:flex;flex-direction:column;gap:10px;margin-top:auto}
 .arow{display:grid;grid-template-columns:5em minmax(0,1fr);column-gap:12px;row-gap:2px;align-items:center}
@@ -173,25 +174,28 @@ body.host .clue p{font-size:.9em}
 const SC=[
  {title:'晶片廠：工程師偷用 AI，程式碼外流了',co:'星河半導體・研發工程師 1,200 人',
   role:'研發副總，這週要決定公司的 AI 政策',
-  story:['工程師用私人 AI 帳號貼程式碼除錯，一個月內外流了 3 次。法務長主張：全面禁用。'],
+  story:['工程師用私人 AI 帳號貼程式碼除錯，一個月內外流了 3 次。'],
   voices:[{k:'m',who:'人資長',say:'主管公開訂好界線：哪些能貼、哪些不能，出事主管扛。',cost:'沒有安全的工具，規矩只能叫大家忍著不用'},
    {k:'it',who:'資訊長',say:'買一套資料不外流的企業版 AI，從源頭解決。',cost:'要半年導入，還要一大筆預算'},
-   {k:'e',who:'研發處長',say:'讓會用的工程師帶大家，教怎麼去掉敏感資料再問 AI。',cost:'還是在用私人帳號，風險沒有歸零'}]},
+   {k:'e',who:'研發處長',say:'讓會用的工程師帶大家，教怎麼去掉敏感資料再問 AI。',cost:'還是在用私人帳號，風險沒有歸零'},
+   {k:'ban',who:'法務長',say:'全面禁用，先止血再說。',cost:'工程師可能改用手機偷偷用，更難管'}]},
  {title:'行銷公司：大家都在用，卻沒人敢承認',co:'森語行銷・員工 80 人・平均 29 歲',
   role:'剛上任的營運長',
-  story:['總監說過「用 AI 寫提案就是偷懶」。實習生用 AI 做的提案讓客戶簽約了，卻說是熬夜做的。總監主張：乾脆禁用，品質才有保障。'],
+  story:['總監說過「用 AI 寫提案就是偷懶」。實習生用 AI 做的提案讓客戶簽約了，卻說是熬夜做的。'],
   voices:[{k:'m',who:'執行長',say:'由我在全員大會公開說可以用，用了被罵算我的。',cost:'總監會覺得被打臉，團隊可能分成兩派'},
    {k:'it',who:'資訊主管',say:'去年買的企業版只有 9% 登入，太難用了。換一套接進提案系統的工具。',cost:'又要花錢，而且大家不用可能不是因為工具'},
-   {k:'e',who:'實習生',say:'讓我公開分享怎麼用 AI 做提案，辦每週讀書會。',cost:'總監還在，敢上台分享的人可能很少'}]},
+   {k:'e',who:'實習生',say:'讓我公開分享怎麼用 AI 做提案，辦每週讀書會。',cost:'總監還在，敢上台分享的人可能很少'},
+   {k:'ban',who:'總監',say:'乾脆禁用，品質才有保障。',cost:'會用的人可能被競爭對手挖走'}]},
  {title:'銀行客服：工具有了，大家卻用不起來',co:'宏遠銀行客服中心・客服人員 300 人',
   role:'客服中心主任，總經理要你一季內讓全中心都用起來',
-  story:['AI 工具已經上線，但多數客服試一次就放棄：「不知道怎麼問。」法遵主管主張：AI 答錯一次就可能被罰款，不如先停用。'],
+  story:['AI 工具已經上線，但多數客服試一次就放棄：「不知道怎麼問。」'],
   voices:[{k:'m',who:'營運副總',say:'主管帶頭每天用，訂好守則，答錯算主管的。',cost:'主管其實已經鼓勵過了，再喊一次可能沒什麼差別'},
    {k:'it',who:'資訊部',say:'把常見問題做成範本和一鍵按鈕，不用自己想怎麼問。',cost:'要 3 個月開發，對手的 AI 客服也是 3 個月後上線'},
-   {k:'e',who:'小組長',say:'讓已經很會用的 5 個人當小老師，每人帶一個班。',cost:'這 5 個人手上的案件會變慢，績效受影響'}]}];
+   {k:'e',who:'小組長',say:'讓已經很會用的 5 個人當小老師，每人帶一個班。',cost:'這 5 個人手上的案件會變慢，績效受影響'},
+   {k:'ban',who:'法遵主管',say:'AI 答錯一次就可能被罰款，先停用。',cost:'對手 3 個月後上線，我們會落後'}]}];
 const LEVER={m:'主管撐腰',it:'IT 鋪路',e:'員工擴散'};
 const LEVER_DESC={m:'主管公開說「可以用」、訂使用守則、出錯主管扛',it:'導入公司核准、資料不外流的 AI 工具',e:'讓會用的人教大家：分享 prompt、辦讀書會'};
-const ASK='👉 你們有 <b>3 點資源</b>，要投在哪裡？';
+const ASK='👉 每組有 <b>3 點</b>，投給前三個提案；或選全面禁用（選了就不能投點）';
 
 const TYPES={
  GRD:{name:'城牆守衛',code:'GRD',bg:'#abd8f0',tag:'先把門關好，再談冒險',traits:['風險意識高','重視規範','穩健保守'],
@@ -371,7 +375,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')$('pop').innerHTML='
 function scenarioCard(c){return `<div class="scard"><div><h3>${c.title}</h3><div class="co">${c.co}</div></div>
  <div class="role"><span class="tag">你是</span>${c.role}</div>
  <div class="scbody"><div><div class="sl">發生什麼事</div>${c.story.map(t=>`<p class="story">${t}</p>`).join('')}</div>
-  <div><div class="sl">三個提案</div><ul class="flist">${c.voices.map(v=>`<li class="${v.k}"><span class="vk">${LEVER[v.k]}</span><b class="vw">${v.who}</b>「${v.say}」<small>代價：${v.cost}</small></li>`).join('')}</ul></div></div>
+  <div><div class="sl">四個提案</div><ul class="flist">${c.voices.map(v=>`<li class="${v.k}"><span class="vk">${NM[v.k]}</span><b class="vw">${v.who}</b>「${v.say}」<small>代價：${v.cost}</small></li>`).join('')}</ul></div></div>
  <div class="ask">${ASK}</div></div>`}
 const leverCards=()=>`<div class="levers">${['m','it','e'].map(k=>`<div class="lv ${k}"><b>${LEVER[k]}</b>${LEVER_DESC[k]}</div>`).join('')}
  <div class="lv ban"><b>或者：全面禁用</b>不投任何資源，公司內禁止用 AI（選了就不能再投點）</div></div>`;
@@ -463,7 +467,7 @@ function renderPlayer(){
   if(sub){ph.innerHTML=`${head}<span class="pill soft">情境 ${i+1}・已送出</span>${sub.why!==undefined?`<h3>${pTxt(sub)}</h3>${sub.why?`<p>「${esc(sub.why)}」</p>`:''}`:''}<div class="waiting"><i data-w="EXP"></i><p>${S.revealed?'本題已揭曉，看大螢幕':'等主持人揭曉，先看大螢幕'}</p></div>${flash?`<p class="errline">${flash}</p>`:''}`}
   else if(S.revealed){ph.innerHTML=`${head}<span class="pill soft">情境 ${i+1}・已結束</span><div class="waiting"><p>本題已揭曉，這題沒有送出</p></div>${err}`}
   else{const left=3-d.m-d.it-d.e;
-   const lev=id=>`<div class="lever ${id}"><div><b>${LEVER[id]}</b><small>${LEVER_DESC[id]}</small></div><div class="stp"><button data-l="${id}" data-d="-1" aria-label="減少${LEVER[id]}">−</button><b>${d[id]}</b><button data-l="${id}" data-d="1" aria-label="增加${LEVER[id]}">＋</button></div></div>`;
+   const lev=id=>`<div class="lever ${id}"><div><b>${LEVER[id]}</b></div><div class="stp"><button data-l="${id}" data-d="-1" aria-label="減少${LEVER[id]}">−</button><b>${d[id]}</b><button data-l="${id}" data-d="1" aria-label="增加${LEVER[id]}">＋</button></div></div>`;
    ph.innerHTML=`${head}<span class="pill soft">情境 ${i+1} / 3</span>${scenarioCard(c)}
     <div class="box"><span class="t">你們的決策・還剩 ${d.ban?0:left} 點可投</span>
      ${d.ban?'<p>已選全面禁用，三根槓桿都不能用</p>':lev('m')+lev('it')+lev('e')}
