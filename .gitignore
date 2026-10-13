@@ -1,0 +1,8 @@
+# secrets
+.env
+.env.*
+!.env.example
+# deps / build
+node_modules/
+.vercel/
+.DS_Store

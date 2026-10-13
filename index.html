@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>HERO 製造機</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&display=swap">
+<style>
+/* Layout: step strip, projector (left) + phone (right), host notes below.
+   One deliberate light world: low-saturation Microsoft four-color macarons on frosted glass. */
+:root{
+  color-scheme:light;
+  --bg:#f4f5fa; --ink:#2b3046; --muted:#6c7290; --line:rgba(43,48,70,.12);
+  --glass:rgba(255,255,255,.62); --glass-strong:rgba(255,255,255,.82);
+  --red:#f1b5a8; --green:#cfe3a6; --blue:#abd8f0; --yellow:#fbe0a0; --lav:#d8d1f2; --mint:#bfe6da;
+  --red-ink:#b9594a; --blue-ink:#2f7fae; --accent:#5b8fd6;
+  --pixel:"Noto Sans TC",system-ui,sans-serif;
+  --round:"Noto Sans TC",system-ui,sans-serif;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--round);font-size:15px;min-height:100%;
+  background-image:radial-gradient(40% 35% at 8% 10%,rgba(241,181,168,.45),transparent 70%),radial-gradient(35% 35% at 92% 8%,rgba(171,216,240,.5),transparent 70%),radial-gradient(40% 40% at 85% 90%,rgba(207,227,166,.45),transparent 70%),radial-gradient(35% 35% at 10% 92%,rgba(251,224,160,.5),transparent 70%);background-attachment:fixed}
+.wrap{max-width:1200px;margin:0 auto;padding-inline:16px;padding-block:20px 40px;display:flex;flex-direction:column;gap:14px}
+h1{font:400 26px var(--pixel);margin:0;letter-spacing:.04em}
+.sub{color:var(--muted);margin:4px 0 0;line-height:1.7}
+.glass{background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.8);box-shadow:0 8px 30px rgba(60,70,110,.08)}
+.steps{display:flex;flex-wrap:wrap;gap:6px}
+.steps button{border:1px solid var(--line);background:var(--glass);color:var(--muted);border-radius:999px;padding:5px 12px;font:500 13px var(--round);cursor:pointer}
+.steps button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.steps button.done{color:var(--ink)}
+.ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:0;background:var(--ink);color:#fff;border-radius:12px;padding:10px 16px;font:700 14px var(--round);cursor:pointer}
+.btn.ghost{background:var(--glass-strong);color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.35;cursor:default}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.timer{font:400 15px var(--pixel);color:var(--muted);margin-left:auto}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.label{font:700 11px var(--round);letter-spacing:.14em;color:var(--muted);margin-bottom:6px}
+.stage{border-radius:18px;min-height:520px;padding:22px 26px;display:flex;flex-direction:column;gap:14px}
+.stage h2{margin:0;font:900 clamp(20px,2.4vw,28px)/1.35 var(--round);text-wrap:balance}
+.eyebrow{font:400 13px var(--pixel);letter-spacing:.12em;color:var(--muted)}
+.big{font:400 clamp(48px,6vw,80px)/1 var(--pixel)}
+.row{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.qr{width:130px;height:130px;background:#fff;border-radius:10px;display:grid;grid-template-columns:repeat(9,1fr);padding:8px;gap:2px}
+.qr i{background:var(--ink)}.qr i.w{background:#fff}
+.scard{background:var(--glass-strong);border:1px solid var(--line);border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;gap:10px;line-height:1.65}
+.scard h3{margin:0;font:900 clamp(18px,2vw,23px) var(--round)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+.fact{border-radius:12px;padding:9px 11px;font-size:13px;line-height:1.5;background:rgba(255,255,255,.7);border:1px solid var(--line)}
+.fact b{display:block;font:400 24px var(--pixel);margin-bottom:2px}
+.fact:nth-child(4n+1){background:color-mix(in srgb,var(--red) 40%,#fff)}
+.fact:nth-child(4n+2){background:color-mix(in srgb,var(--green) 45%,#fff)}
+.fact:nth-child(4n+3){background:color-mix(in srgb,var(--blue) 40%,#fff)}
+.fact:nth-child(4n){background:color-mix(in srgb,var(--yellow) 45%,#fff)}
+.groups{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:auto}
+@media (max-width:620px){.groups{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.g{border:2px dashed var(--line);border-radius:12px;padding:10px;text-align:center;font-size:13px;color:var(--muted)}
+.g.ok{border-style:solid;border-color:#9fc77a;background:color-mix(in srgb,var(--green) 55%,#fff);color:var(--ink)}
+.g b{display:block;font:400 16px var(--pixel);color:var(--ink)}
+.lineup{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;flex:1}
+@media (max-width:700px){.lineup{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.who{border:0;border-radius:16px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font-family:var(--round);color:var(--ink);text-align:center;transition:transform .2s}
+.who:hover{transform:translateY(-4px)}
+.who canvas{width:100%;max-width:120px;image-rendering:pixelated}
+.who .gn{font:400 13px var(--pixel);color:var(--muted)}
+.who .tn{font:900 16px var(--round)}
+.who .tl{font-size:12px;color:var(--muted);line-height:1.45}
+.dex{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+@media (max-width:620px){.dex{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.dex div{border-radius:12px;padding:6px;text-align:center;font-size:12px}
+.dex canvas{width:100%;max-width:64px;image-rendering:pixelated}
+.clue{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line)}
+@media (max-width:620px){.clue{grid-template-columns:minmax(0,1fr)}}
+.clue p{margin:0;font-size:13px;line-height:1.6}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-size:11px;border-radius:999px;padding:2px 8px;background:rgba(255,255,255,.8);border:1px solid var(--line)}
+/* phone */
+.phone{background:var(--glass-strong);backdrop-filter:blur(14px);border:8px solid var(--ink);border-radius:32px;padding:16px 14px;height:640px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;max-width:320px;width:100%;justify-self:center;position:relative}
+.phone h3{margin:0;font:900 17px/1.4 var(--round)}
+.phone p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+.phone ul{margin:0;padding-left:1.1em;font-size:13px;line-height:1.6;display:flex;flex-direction:column;gap:3px}
+.pill{align-self:flex-start;background:var(--blue);color:var(--ink);border-radius:999px;padding:3px 10px;font:400 12px var(--pixel)}
+.box{border:1px solid var(--line);background:rgba(255,255,255,.7);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.box .t{font:400 12px var(--pixel);letter-spacing:.08em;color:var(--muted)}
+.opt{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:9px 10px;font:500 14px var(--round);cursor:pointer;text-align:left}
+.opt.sel{border-color:var(--red-ink);color:var(--red-ink);background:color-mix(in srgb,var(--red) 30%,#fff);font-weight:700}
+.lever{display:flex;justify-content:space-between;align-items:center;border-radius:10px;padding:8px 10px;gap:8px}
+.lever.m{background:color-mix(in srgb,var(--red) 40%,#fff)}.lever.it{background:color-mix(in srgb,var(--blue) 40%,#fff)}.lever.e{background:color-mix(in srgb,var(--green) 50%,#fff)}
+.lever div{min-width:0}.lever small{display:block;color:var(--muted);font-size:11px;line-height:1.4}
+.stp{display:flex;align-items:center;gap:6px}
+.stp button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:700;cursor:pointer}
+.stp b{font:400 18px var(--pixel);width:14px;text-align:center}
+textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:10px;padding:8px;font:14px var(--round);background:#fff;color:var(--ink);resize:none}
+.groupsel{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.groupsel button{padding:12px 0;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink);font:400 18px var(--pixel);cursor:pointer}
+.groupsel button.sel{background:var(--ink);color:#fff}
+.confirm{background:color-mix(in srgb,var(--yellow) 50%,#fff);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;font-size:13px}
+.waiting{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;margin:auto 0}
+.waiting canvas{width:120px;image-rendering:pixelated;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.notes{border-radius:16px;padding:14px 16px;line-height:1.8}
+.notes b{color:var(--blue-ink)}
+/* pop-up */
+.pop{position:fixed;inset:0;background:rgba(43,48,70,.35);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}
+.pop .in{background:var(--glass-strong);border-radius:22px;padding:14px;max-width:420px;width:100%;max-height:92vh;overflow:auto;display:flex;flex-direction:column;gap:10px;animation:popin .45s cubic-bezier(.2,1.4,.4,1)}
+.pop img{width:100%;border-radius:14px;display:block}
+.pop .acts{display:flex;gap:8px}.pop .acts .btn{flex:1}
+.pop .hint{font-size:12px;color:var(--muted);text-align:center;margin:0}
+.phone .pop{position:absolute;border-radius:24px}
+@keyframes popin{from{transform:scale(.6);opacity:0}}
+@media (prefers-reduced-motion:reduce){.waiting canvas,.pop .in{animation:none}.who{transition:none}}
+
+html,body{height:100%}
+.hostwrap{height:100vh;display:flex;flex-direction:column;gap:12px;padding:16px;box-sizing:border-box}
+.hostwrap .stage{flex:1;min-height:0;overflow:auto;font-size:clamp(15px,1.35vw,22px)}
+body.host .fact{font-size:.78em}body.host .fact b{font-size:1.6em}body.host .scard h3{font-size:1.35em}
+body.host .g{font-size:.75em}body.host .g b{font-size:1.2em}
+.hbar{display:flex;gap:10px;align-items:center;border-radius:14px;padding:10px 12px;flex-wrap:wrap}
+.hbar #stepname{font-weight:700}
+#playerwrap .phone{border:0;border-radius:0;height:auto;min-height:100vh;max-width:520px;margin:0 auto;padding:20px 16px 40px;box-sizing:border-box;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;overflow:visible}
+.ptop{display:flex;justify-content:space-between;align-items:center}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;font:500 13px var(--round);cursor:pointer}
+.pill.soft{background:var(--yellow)}
+.errline{color:var(--red-ink);font-size:13px;margin:0}
+.qrbox{background:#fff;padding:12px;border-radius:14px;line-height:0;min-width:120px;min-height:120px}
+.url{font-weight:700;margin-top:8px}
+.lineup{flex:none;align-items:start}
+</style></head>
+<body>
+<div id="hostwrap" class="hostwrap">
+  <section class="stage glass" id="stage"></section>
+  <div class="hbar glass">
+    <button class="btn ghost" id="prev">上一步</button>
+    <span id="stepname"></span><span class="timer" id="timer"></span><span id="err" class="errline"></span>
+    <button class="btn" id="next">下一步</button>
+    <button class="btn ghost" id="reset">重設遊戲</button>
+  </div>
+</div>
+<div id="playerwrap"><section class="phone" id="phone"></section></div>
+<div id="pop"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* HERO 製造機・遊戲設計：筱于 */
+/* ---------- content ---------- */
+const SC=[
+ {title:'晶片廠的程式碼外流',co:'星河半導體・研發工程師 1,200 人',
+  facts:[['58%','匿名調查：曾用「私人」AI 帳號處理工作'],['3 起','20 天內的外流事件：程式碼 2 起、會議紀錄 1 起'],['0 套','經過資安審核的 AI 工具'],['−30%','有用 AI 的工程師，除錯時間平均減少']],
+  event:'法務長建議全面禁用 AI，研發處長反對：「禁了大家就改用手機偷用」<br>董事會要你這週拍板',
+  lack:'it',clue:'這家公司連一套安全的工具都沒有，沒路可走的時候，再怎麼鼓勵，大家也只能用自己的私人帳號'},
+ {title:'不敢說實話的實習生',co:'森語行銷・員工 80 人・平均 29 歲',
+  facts:[['9%','公司去年就買了企業版 AI（資料不外流），登入率只有 9%'],['64%','匿名問卷：其實有在用 AI，大多用私人帳號'],['1 句話','總監在全員大會說過：「用 AI 寫提案就是偷懶」'],['2 週','實習生用 AI 做的提案，讓客戶 2 週內就簽約']],
+  event:'客戶當場問：「這份分析怎麼做的？」實習生回答：「熬夜做的」<br>你是剛上任的營運長',
+  lack:'m',clue:'工具早就買好了，缺的是一句「可以用」，大家不敢說，是因為不覺得被允許'},
+ {title:'只有五個人會用',co:'宏遠銀行客服中心・客服人員 300 人',
+  facts:[['✓','企業版 AI 已上線，通過資安與法規審核'],['✓','主管公開鼓勵使用，也有清楚的使用守則'],['5 人','真正用得好的人，案件處理時間縮短 40%'],['3 個月','競爭對手預計推出 AI 客服']],
+  event:'其他客服大多試過一次就放棄，理由是「不知道怎麼問」<br>總經理要你在一季內讓整個中心都用起來',
+  lack:'e',clue:'工具有了、主管也點頭了，卡在只有少數人會用，會的人願意教，才會長出更多會用的人'}];
+const LEVER={m:'主管撐腰',it:'IT 鋪路',e:'員工擴散'};
+
+const TYPES={
+ GRD:{name:'城牆守衛',code:'GRD',bg:'#abd8f0',tag:'先把門關好，再談冒險',traits:['風險意識高','重視規範','穩健保守'],
+  paper:'你們像城堡的守門人，先確認沒有漏洞才肯開門',think:'門關得太緊的時候，大家會不會改翻窗戶出去？',mate:'MEN'},
+ BLD:{name:'鋪路工匠',code:'BLD',bg:'#fbe0a0',tag:'路鋪好，大家自然會走',traits:['務實派','重視工具','系統思考'],
+  paper:'你們像在荒地上先鋪好柏油路的人，相信路好走，大家自然會出發',think:'路鋪好了，大家敢不敢踏出第一步？',mate:'CAP'},
+ CAP:{name:'旗手隊長',code:'CAP',bg:'#f1b5a8',tag:'方向我來給，失敗我來扛',traits:['敢授權','有擔當','領導力'],
+  paper:'你們像拿著旗子站在最前面的隊長，先讓大家知道「放心衝，出事我扛」',think:'手上沒有好工具的時候，這份勇氣會被用在哪裡？',mate:'BLD'},
+ MEN:{name:'火把導師',code:'MEN',bg:'#cfe3a6',tag:'一個人會不算會，大家會才算',traits:['樂於分享','團隊學習','由下而上'],
+  paper:'你們像拿著火把的人，自己先點亮，再一根一根傳下去',think:'第一把火，需要誰先點頭讓它點起來？',mate:'GRD'},
+ BAL:{name:'四色魔法師',code:'BAL',bg:'#d8d1f2',tag:'每一方都照顧到，誰都不落下',traits:['顧全大局','重視公平','協調力強'],
+  paper:'你們像把每道菜都顧好的主廚，人、規則、工具一樣都不少',think:'三樣都顧到很周到，但如果這間公司其實只缺其中一樣呢？',mate:'EXP'},
+ EXP:{name:'地圖探險家',code:'EXP',bg:'#bfe6da',tag:'每張地圖都不一樣，先看再走',traits:['彈性應變','善於觀察','因地制宜'],
+  paper:'你們像每到一張新地圖就先看地形的玩家，這關缺什麼就補什麼',think:'一直換路線的時候，團隊需要一個不變的方向嗎？',mate:'BAL'}};
+
+
+/* ---------- pixel characters ---------- */
+const SKIN='#f6d7bf',HAIR='#6b5444',EYE='#2b3046',BLUSH='#f3a99b',PANTS='#6a7594',SHOE='#454c66',WOOD='#a07a55',STONE='#b3b9c6';
+const SHIRT={GRD:'#86bde0',BLD:'#f2c96e',CAP:'#e99a8a',MEN:'#a6c978',BAL:'#b4a8e2',EXP:'#86cdb8'};
+function drawChar(ctx,type,ox,oy,u){
+ const r=(x,y,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(ox+x*u,oy+y*u,w*u,h*u)};
+ const sh=SHIRT[type];
+ if(type==='EXP'){r(7,14,10,6,'#c9a57e')}
+ // head
+ r(8,6,8,8,SKIN);r(8,6,8,2,HAIR);r(8,8,1,2,HAIR);r(15,8,1,2,HAIR);
+ r(10,10,1,2,EYE);r(13,10,1,2,EYE);r(9,12,1,1,BLUSH);r(14,12,1,1,BLUSH);r(11,12,2,1,'#c97f72');
+ // body, arms, legs
+ r(8,14,8,6,sh);r(6,14,2,5,sh);r(16,14,2,5,sh);r(6,19,2,1,SKIN);r(16,19,2,1,SKIN);
+ r(8,20,4,3,PANTS);r(12,20,4,3,PANTS);r(8,23,4,1,SHOE);r(12,23,4,1,SHOE);r(11,14,2,1,'rgba(255,255,255,.5)');
+ if(type==='GRD'){r(7,4,10,3,'#cfd4de');r(7,6,10,1,STONE);r(7,7,1,5,'#cfd4de');r(16,7,1,5,'#cfd4de');r(11,2,2,2,'#86bde0');
+  r(17,13,5,7,'#86bde0');r(18,14,3,5,'#a9d2ec');r(19,14,1,5,'#fbe0a0');r(18,16,3,1,'#fbe0a0')}
+ if(type==='BLD'){r(8,4,8,2,'#f2c96e');r(7,6,10,1,'#e3b354');r(11,3,2,1,'#f2c96e');
+  [[17,19],[18,18],[19,17],[19,16],[20,15],[20,14]].forEach(([x,y])=>r(x,y,1,1,WOOD));r(18,13,5,1,STONE);r(18,14,1,1,STONE);r(22,14,1,1,STONE)}
+ if(type==='CAP'){r(8,3,8,3,'#454c66');r(8,5,8,1,'#e99a8a');r(11,3,2,1,'#fbe0a0');
+  r(19,3,1,17,WOOD);r(20,3,4,4,'#e99a8a');r(20,4,4,1,'#fff3ee');r(18,18,1,1,SKIN)}
+ if(type==='MEN'){r(9,9,2,1,'#6b5444');r(13,9,2,1,'#6b5444');r(19,12,1,7,WOOD);r(18,9,3,3,'#fbd27a');r(19,8,1,1,'#f1b5a8');r(19,10,1,1,'#f1a08e');
+  r(2,15,4,4,'#a6c978');r(3,16,2,2,'#fff6e0')}
+ if(type==='BAL'){r(7,5,10,1,'#b4a8e2');r(8,4,8,1,'#b4a8e2');r(9,3,6,1,'#b4a8e2');r(10,2,4,1,'#b4a8e2');r(11,1,2,1,'#b4a8e2');r(11,3,1,1,'#fbe0a0');
+  r(20,13,1,7,WOOD);r(19,10,3,3,'#c9bff0');r(19,10,1,1,'#ffffff');r(20,9,1,1,'#b4a8e2')}
+ if(type==='EXP'){r(6,5,12,1,'#c9a57e');r(8,3,8,2,'#c9a57e');r(8,4,8,1,'#a9865f');
+  r(17,14,6,5,'#fff6e0');r(18,17,1,1,'#86cdb8');r(19,16,1,1,'#86cdb8');[[20,15],[22,15],[21,16],[20,17],[22,17]].forEach(([x,y])=>r(x,y,1,1,'#e99a8a'))}
+}
+function charCanvas(type,u=5){const c=document.createElement('canvas');c.width=c.height=24*u;drawChar(c.getContext('2d'),type,0,0,u);return c}
+
+/* ---------- shareable card (1080×1350) ---------- */
+const NOSTART='，。：；、！？」）』…';function wrapText(ctx,t,x,y,maxW,lh){let line='',yy=y;for(const ch of t){if(ctx.measureText(line+ch).width>maxW&&line&&!NOSTART.includes(ch)){ctx.fillText(line,x,yy);line=ch;yy+=lh}else line+=ch}ctx.fillText(line,x,yy);return yy+lh}
+const LC={m:'#e99a8a',it:'#86bde0',e:'#a6c978',ban:'#c3c8d3'};
+const NM={m:'主管撐腰',it:'IT 鋪路',e:'員工擴散',ban:'全面禁用',bal:'平均分配'};
+function stats(g){
+ const ps=[0,1,2].map(i=>plan(g,i)),ds=ps.map(dom),t={m:0,it:0,e:0};
+ ps.forEach(p=>{if(!p.ban){t.m+=p.m;t.it+=p.it;t.e+=p.e}});
+ const ban=ds.filter(x=>x==='ban').length,avgMax=ps.reduce((a,p)=>a+(p.ban?3:Math.max(p.m,p.it,p.e)),0)/3;
+ return{ps,ds,t,ban,caution:ban/3,focus:(avgMax-1)/2,adapt:(new Set(ds).size-1)/2}}
+function whyLine(type,S){
+ if(type==='GRD')return`三題裡有 ${S.ban} 題選擇全面禁用，安全永遠排第一`;
+ if(type==='EXP')return`三題分別押了「${S.ds.map(x=>NM[x]).join('」「')}」，每一題都換一根槓桿`;
+ if(type==='BAL')return`三題裡有 ${S.ds.filter(x=>x==='bal').length} 題選擇平均分配，三方一個都不放掉`;
+ const k={CAP:'m',BLD:'it',MEN:'e'}[type];return`三題加總，「${NM[k]}」拿到 ${S.t[k]} / 9 點，是你們最常押的槓桿`}
+async function makeCard(type,g){
+ try{await Promise.all(['500 40px "Noto Sans TC"','700 40px "Noto Sans TC"','900 40px "Noto Sans TC"'].map(f=>document.fonts.load(f)))}catch(e){}
+ const T=TYPES[type],S=stats(g),W=1080,H=2300,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+ const F=(w,s)=>`${w} ${s}px "Noto Sans TC",sans-serif`,INK='#2b3046',MU='#6c7290',SUB='#4a5070';
+ const rr=(X,Y,w,h,r,col)=>{x.fillStyle=col;x.beginPath();x.roundRect(X,Y,w,h,r);x.fill()};
+ x.fillStyle='#f6f7fb';x.fillRect(0,0,W,H);
+ const blob=(cx,cy,r,col)=>{const gr=x.createRadialGradient(cx,cy,0,cx,cy,r);gr.addColorStop(0,col);gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,W,H)};
+ blob(160,200,560,T.bg);blob(960,380,460,'rgba(171,216,240,.65)');blob(940,1900,560,'rgba(207,227,166,.65)');blob(120,1500,480,'rgba(251,224,160,.7)');
+ rr(48,48,W-96,H-96,52,'rgba(255,255,255,.64)');x.strokeStyle='rgba(255,255,255,.95)';x.lineWidth=3;x.stroke();
+ // header
+ x.fillStyle=MU;x.font=F(700,30);x.fillText('HERO 製造機・AI 決策風格測驗',100,130);
+ x.textAlign='right';x.fillText(`第 ${g} 組`,W-100,130);x.textAlign='center';
+ // hero block
+ rr(W/2-200,180,400,400,44,T.bg);drawChar(x,type,W/2-192,188,16);
+ x.fillStyle=MU;x.font=F(700,30);x.fillText(`TYPE ${T.code}`,W/2,650);
+ x.fillStyle=INK;x.font=F(900,100);x.fillText(T.name,W/2,760);
+ x.fillStyle=SUB;x.font=F(700,38);x.fillText(`「${T.tag}」`,W/2,830);
+ x.font=F(700,28);const tags=T.traits.map(t=>'#'+t),ws=tags.map(t=>x.measureText(t).width+44),rows=[[]];let rw=0;
+ tags.forEach((t,i)=>{if(rw+ws[i]>W-200&&rows.at(-1).length){rows.push([]);rw=0}rows.at(-1).push(i);rw+=ws[i]+14});
+ x.textAlign='left';rows.forEach((row,ri)=>{const tot=row.reduce((a,i)=>a+ws[i],0)+14*(row.length-1);let cx=(W-tot)/2;
+  row.forEach(i=>{rr(cx,875+ri*70,ws[i],56,28,['#f6d0c8','#cde6f5','#dfedc4'][i]);x.fillStyle=INK;x.fillText(tags[i],cx+22,913+ri*70);cx+=ws[i]+14})});
+ const title=(y,t)=>{rr(100,y-26,10,30,5,T.bg);x.fillStyle=INK;x.font=F(900,34);x.textAlign='left';x.fillText(t,124,y)};
+ // 1. spectrum
+ title(1020,'你們的風格光譜');
+ [['放手開放','謹慎守門',S.caution],['雨露均霑','集中火力',S.focus],['堅持路線','隨機應變',S.adapt]].forEach(([l,r,v],i)=>{
+  const y=1090+i*76,x1=310,x2=W-310;
+  x.font=F(700,28);x.fillStyle=v<=.5?INK:MU;x.textAlign='left';x.fillText(l,100,y+10);
+  x.fillStyle=v>=.5?INK:MU;x.textAlign='right';x.fillText(r,W-100,y+10);
+  rr(x1,y-6,x2-x1,14,7,'rgba(43,48,70,.1)');
+  const px=x1+(x2-x1)*Math.max(0,Math.min(1,v));
+  x.beginPath();x.arc(px,y+1,20,0,Math.PI*2);x.fillStyle=T.bg;x.fill();x.lineWidth=5;x.strokeStyle=INK;x.stroke()});
+ // 2. allocation
+ title(1340,'點數都押在哪裡');
+ const ox=280,oy=1585,R=140,ang=[-90,30,150].map(a=>a*Math.PI/180),keys=['m','it','e'];
+ const pt=(k,s)=>[ox+Math.cos(ang[k])*R*s,oy+Math.sin(ang[k])*R*s];
+ x.strokeStyle='rgba(43,48,70,.15)';x.lineWidth=2;
+ [1/3,2/3,1].forEach(s=>{x.beginPath();[0,1,2].forEach(k=>{const[a,b]=pt(k,s);k?x.lineTo(a,b):x.moveTo(a,b)});x.closePath();x.stroke()});
+ [0,1,2].forEach(k=>{const[a,b]=pt(k,1);x.beginPath();x.moveTo(ox,oy);x.lineTo(a,b);x.stroke()});
+ x.beginPath();keys.forEach((kk,k)=>{const[a,b]=pt(k,Math.max(.06,S.t[kk]/9));k?x.lineTo(a,b):x.moveTo(a,b)});x.closePath();
+ x.fillStyle=T.bg;x.globalAlpha=.85;x.fill();x.globalAlpha=1;x.strokeStyle=INK;x.lineWidth=4;x.stroke();
+ x.font=F(700,24);x.textAlign='center';
+ keys.forEach((kk,k)=>{const[a,b]=pt(k,1.32);x.fillStyle=INK;x.fillText(NM[kk],a,b);x.fillStyle=MU;x.fillText(`${S.t[kk]} 點`,a,b+30)});
+ // stacked bars per scenario
+ const bx=540,bw=440;
+ SC.forEach((sc,i)=>{const y=1420+i*100,p=S.ps[i];
+  x.textAlign='left';x.fillStyle=MU;x.font=F(700,22);x.fillText(`情境 ${i+1}・${sc.title}`,bx,y);
+  if(p.missing){rr(bx,y+14,bw,40,12,'rgba(43,48,70,.08)');x.fillStyle=MU;x.font=F(700,22);x.fillText('這題沒有送出',bx+16,y+42)}else if(p.ban){rr(bx,y+14,bw,40,12,LC.ban);x.fillStyle=INK;x.font=F(700,22);x.fillText('全面禁用',bx+16,y+42)}
+  else{let sx=bx;keys.forEach(kk=>{const w=bw*p[kk]/3;if(w>0){rr(sx+2,y+14,w-4,40,12,LC[kk]);x.fillStyle=INK;x.font=F(700,22);if(w>60)x.fillText(`${p[kk]}`,sx+16,y+42)}sx+=w})}});
+ let lx=bx;x.font=F(500,22);[['m','主管'],['it','IT'],['e','員工'],['ban','禁用']].forEach(([kk,l])=>{rr(lx,1730,22,22,6,LC[kk]);x.fillStyle=SUB;x.textAlign='left';x.fillText(l,lx+30,1749);lx+=x.measureText(l).width+64});
+ // 3. why
+ title(1830,'為什麼是你們');
+ x.textAlign='left';x.fillStyle=INK;x.font=F(700,30);let y=wrapText(x,whyLine(type,S),100,1885,W-200,44);
+ x.fillStyle=SUB;x.font=F(500,27);y=wrapText(x,T.paper,100,y+6,W-200,40);x.fillStyle=T.code==='GRD'?'#2f7fae':SUB;x.font=F(700,27);y=wrapText(x,'可以再想想：'+T.think,100,y+4,W-200,40);
+ // footer: mate + source
+ const M=TYPES[T.mate],fy=Math.max(y+10,H-170);
+ rr(100,fy,72,72,16,M.bg);drawChar(x,T.mate,104,fy+4,2.7);
+ x.fillStyle=INK;x.font=F(700,26);x.fillText(`最佳拍檔：${M.name}`,188,fy+32);
+ x.fillStyle=MU;x.font=F(500,22);x.fillText(M.tag,188,fy+64);
+ x.textAlign='right';x.fillStyle=INK;x.font=F(700,22);x.fillText('遊戲設計｜筱于',W-100,fy+32);x.fillStyle=MU;x.font=F(500,20);x.fillText('OB・Bernoff & Schadler (2010) Empowered',W-100,fy+64);
+ return c}
+
+
+/* ---------- live data ---------- */
+const GROUPS=5;
+const STEPS=[{k:'join',name:'掃碼選組'},{k:'rule',name:'遊戲規則'},{k:'s0',name:'情境 1'},{k:'s1',name:'情境 2'},{k:'s2',name:'情境 3'},{k:'reveal',name:'角色揭曉'},{k:'clue',name:'情境線索'}];
+const SCENARIO_SECONDS=240;
+const HOST_KEY=new URLSearchParams(location.search).get('host');
+const MODE=HOST_KEY?'host':'player';
+let S={step:0,players:[],subs:[],changedAt:null,offset:0,loaded:false,error:''};
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let myId=store.get('hero_id');if(!myId){myId=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2));store.set('hero_id',myId)}
+let myGroup=Number(store.get('hero_group'))||null;
+const MISSING={m:1,it:1,e:1,ban:false,why:'（這題沒有送出）',missing:true};
+const subOf=(g,i)=>S.subs.find(x=>x.group_no===g&&x.scenario===i);
+const plan=(g,i)=>{const s=subOf(g,i);return s&&s.why!==undefined?s:MISSING};
+const pTxt=p=>p.missing?'未送出':p.ban?'全面禁用':`主管 ${p.m}・IT ${p.it}・員工 ${p.e}`;
+function dom(p){if(p.ban)return'ban';const mx=Math.max(p.m,p.it,p.e);if(mx===1)return'bal';return['m','it','e'].find(k=>p[k]===mx)}
+function classify(g){
+ const ps=[0,1,2].map(i=>plan(g,i)),ds=ps.map(dom);
+ if(ds.filter(x=>x==='ban').length>=2)return'GRD';
+ const lev=ds.filter(x=>['m','it','e'].includes(x));
+ if(new Set(lev).size===3)return'EXP';
+ if(ds.filter(x=>x==='bal').length>=2)return'BAL';
+ const t={m:0,it:0,e:0};ps.forEach(p=>{if(!p.ban){t.m+=p.m;t.it+=p.it;t.e+=p.e}});
+ const mx=Math.max(t.m,t.it,t.e),top=Object.keys(t).filter(k=>t[k]===mx);
+ if(top.length>1)return ds.includes('ban')?'GRD':'BAL';
+ return{m:'CAP',it:'BLD',e:'MEN'}[top[0]]}
+const activeGroups=()=>[...Array(GROUPS)].map((_,i)=>i+1).filter(g=>S.subs.some(s=>s.group_no===g)||S.players.some(p=>p.group_no===g));
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $=id=>document.getElementById(id);
+
+async function api(path,body){
+ try{const r=await fetch(path,{method:body?'POST':'GET',headers:body?{'content-type':'application/json'}:{},body:body?JSON.stringify(body):undefined,cache:'no-store'});
+  const j=await r.json().catch(()=>({}));return{ok:r.ok,status:r.status,...j}}
+ catch(e){return{ok:false,status:0,error:'網路斷線了，請檢查連線'}}}
+
+let lastKey='';
+async function poll(){
+ const r=await api('/api/state'+(myGroup?`?group=${myGroup}`:''));
+ if(!r.ok){S.error=r.error||'連不上伺服器';}
+ else{S={...S,step:r.step,players:r.players,subs:r.subs,changedAt:r.changedAt,offset:Date.parse(r.now)-Date.now(),loaded:true,error:''}}
+ const key=MODE==='host'?JSON.stringify([S.step,S.players,S.subs,S.error]):JSON.stringify([S.step,S.loaded,S.subs.filter(x=>x.group_no===myGroup),S.step>=5?S.subs:0,S.error,myGroup]);
+ if(key!==lastKey){lastKey=key;render()}
+}
+function remaining(){if(!S.changedAt)return null;const el=(Date.now()+S.offset-Date.parse(S.changedAt))/1000;return Math.max(0,Math.ceil(SCENARIO_SECONDS-el))}
+const fmt=s=>`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+setInterval(()=>{const t=$('timer');if(!t)return;const k=STEPS[S.step]?.k||'';if(/^s\d$/.test(k)){const r=remaining();t.textContent=r===null?'':(r>0?'⏱ '+fmt(r):'⏱ 時間到')}else t.textContent=''},500);
+
+/* ---------- pop-up & download ---------- */
+async function openPop(hostEl,type,g){
+ const card=await makeCard(type,g),url=card.toDataURL('image/png');
+ hostEl.innerHTML=`<div class="pop" data-close="1"><div class="in" role="dialog" aria-label="決策風格圖卡"><img src="${url}" alt="第 ${g} 組：${TYPES[type].name}"><div class="acts"><button class="btn" data-dl="1">下載圖卡</button><button class="btn ghost" data-close="1">關閉</button></div><p class="hint">手機也可以長按圖片儲存</p></div></div>`;
+ hostEl.querySelector('[data-dl]').onclick=()=>card.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`HERO製造機_第${g}組_${TYPES[type].name}.png`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)},'image/png');
+}
+document.addEventListener('click',e=>{const cl=e.target.closest('[data-close]');if(cl&&(e.target===cl||cl.tagName==='BUTTON')){$('pop').innerHTML=''}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('pop').innerHTML=''});
+
+/* ---------- shared stage pieces ---------- */
+function scenarioCard(c){return `<div class="scard"><h3>${c.title}</h3><div style="color:var(--muted);font-size:.9em">${c.co}</div>
+ <div class="facts">${c.facts.map(f=>`<div class="fact"><b>${f[0]}</b>${f[1]}</div>`).join('')}</div><div>${c.event}</div></div>`}
+
+/* ---------- HOST (big screen) ---------- */
+let qrDone=false,resetArmed=false;
+function renderHost(){
+ const k=STEPS[S.step].k,st=$('stage'),groups=[...Array(GROUPS)].map((_,i)=>i+1);
+ const count=g=>(S.players.find(p=>p.group_no===g)||{}).n||0,total=S.players.reduce((a,p)=>a+p.n,0);
+ $('stepname').textContent=`${S.step+1} / ${STEPS.length}・${STEPS[S.step].name}`;
+ $('prev').disabled=S.step===0;$('next').disabled=S.step===STEPS.length-1;
+ if(S.error)$('err').textContent=S.error;else $('err').textContent='';
+ if(k!=='join')qrDone=false;
+ if(k==='join'){
+  st.innerHTML=`<div class="eyebrow">換你們當決策者</div><h2>掃碼選組，測出你們這組的「AI 決策風格」</h2>
+   <div class="row" style="flex:1"><div id="qr" class="qrbox"></div><div><div class="big">${total}</div><div style="color:var(--muted)">人已加入</div>
+   <div class="url">${location.host}</div><div style="color:var(--muted);font-size:.85em;margin-top:6px">遊戲設計｜筱于</div></div>
+   <div class="row" style="gap:6px" id="sil"></div></div>
+   <div class="groups">${groups.map(g=>`<div class="g ${count(g)?'ok':''}"><b>第 ${g} 組</b>${count(g)} 人</div>`).join('')}</div>`;
+  ['GRD','BLD','CAP','MEN','BAL','EXP'].forEach(t=>{const c=charCanvas(t,3);c.style.cssText='width:60px;image-rendering:pixelated;opacity:.85';$('sil').appendChild(c)});
+  if(window.QRCode){new QRCode($('qr'),{text:location.origin+'/',width:220,height:220,colorDark:'#2b3046',colorLight:'#ffffff'})}
+  else $('qr').textContent=location.origin;
+ }
+ if(k==='rule'){
+  st.innerHTML=`<div class="eyebrow">遊戲規則</div><h2>三間公司、三種 AI 困境，每次 3 點，分給你覺得最需要的地方</h2>
+   <div class="facts">
+    <div class="fact"><b>主管撐腰</b>明確規則，公開說「可以用，失敗我扛」</div>
+    <div class="fact"><b>員工擴散</b>prompt 庫、讀書會，讓會用的人教別人</div>
+    <div class="fact"><b>IT 鋪路</b>提供安全的企業版工具，資安把關</div>
+    <div class="fact"><b>全面禁用</b>不花點數，三根槓桿都不能用</div></div>
+   <div class="scard">沒有標準答案，也不打分數<br>每題 4 分鐘，組內討論後由任何一人送出<br>三題做完，會依照你們的選擇測出這組的「決策風格」</div>`;
+ }
+ const sm=k.match(/^s(\d)$/);
+ if(sm){const i=+sm[1];
+  st.innerHTML=`<div class="eyebrow">情境 ${i+1} / 3</div>${scenarioCard(SC[i])}
+   <div class="groups">${groups.map(g=>{const ok=!!subOf(g,i);return `<div class="g ${ok?'ok':''}"><b>第 ${g} 組</b>${ok?'已送出 ✓':count(g)?'討論中…':'—'}</div>`}).join('')}</div>`;
+ }
+ if(k==='reveal'){const gs=activeGroups();
+  st.innerHTML=`<div class="eyebrow">決策風格揭曉・點角色看圖卡</div><h2>你們這組是哪一種 AI 決策者？</h2>
+   <div class="lineup">${gs.map(g=>{const t=classify(g),T=TYPES[t];return `<button class="who" data-pop="${g}" style="background:color-mix(in srgb,${T.bg} 55%,#fff)"><span class="gn">第 ${g} 組</span><i data-c="${t}"></i><span class="tn">${T.name}</span><span class="tl">${T.tag}</span></button>`}).join('')||'<p>還沒有任何組別送出</p>'}</div>`;
+  st.querySelectorAll('[data-c]').forEach(e=>e.replaceWith(charCanvas(e.dataset.c,5)));
+ }
+ if(k==='clue'){const gs=activeGroups();
+  st.innerHTML=`<div class="eyebrow">三張地圖裡藏的線索</div><h2>工具換了，問題沒變：先看公司缺哪一方</h2>
+   <div>${SC.map((c,i)=>`<div class="clue"><p><b>${c.title}</b>：缺的是「${LEVER[c.lack]}」，${c.clue}</p>
+     <div class="chips">${gs.map(g=>`<span class="chip">${g} 組・${pTxt(plan(g,i))}</span>`).join('')}</div></div>`).join('')}</div>
+   <div class="dex">${Object.entries(TYPES).map(([t,T])=>`<div style="background:color-mix(in srgb,${T.bg} 55%,#fff)"><i data-c="${t}"></i><br>${T.name}</div>`).join('')}</div>
+   <div class="scard">延伸閱讀：Mollick《Co-Intelligence》（中譯《工作者的 AI 共智模式》）</div>`;
+  st.querySelectorAll('[data-c]').forEach(e=>{const c=charCanvas(e.dataset.c,3);c.style.cssText='width:100%;max-width:60px;image-rendering:pixelated';e.replaceWith(c)});
+ }
+}
+async function hostGo(step){const r=await api('/api/host',{key:HOST_KEY,action:'go',step});if(!r.ok)$('err').textContent=r.error||'切換失敗';await poll()}
+
+/* ---------- PLAYER (phone) ---------- */
+let d={m:0,it:0,e:0,ban:false,why:''},confirming=false,draftFor=-1,popShownFor=null,sending=false,flash='';
+function renderPlayer(){
+ const k=STEPS[S.step].k,ph=$('phone');
+ if(!S.loaded){ph.innerHTML=`<div class="waiting"><p>${S.error||'連線中…'}</p></div>`;return}
+ const err=S.error?`<p class="errline">${esc(S.error)}</p>`:'';
+ if(!myGroup){
+  ph.innerHTML=`<span class="pill">HERO 製造機</span><h3>你在第幾組？</h3><p>照座位分好的組別點一下就好，不用填名字</p>
+   <div class="groupsel">${[...Array(GROUPS)].map((_,i)=>`<button data-g="${i+1}">${i+1}</button>`).join('')}</div>${err}
+   <p style="margin-top:auto;font-size:12px">遊戲設計｜筱于</p>`;return}
+ const G=myGroup,head=`<div class="ptop"><span class="pill">第 ${G} 組</span><button class="link" data-regroup="1">換組</button></div>`;
+ if(k==='join'){ph.innerHTML=`${head}<div class="waiting"><i data-w="BAL"></i><h3>第 ${G} 組報到完成</h3><p>等主持人開始</p></div>${err}`}
+ if(k==='rule'){ph.innerHTML=`${head}<h3>規則</h3><ul><li>每題 4 分鐘，組內討論後由<b>任何一人</b>送出，送出就鎖定</li><li>3 點分給三根槓桿，也可以選全面禁用</li><li>附一句理由，揭曉時會出現在你們的角色旁邊</li><li>沒有標準答案，也不打分數</li></ul>
+   <div class="box"><span class="t">三根槓桿</span><ul><li><b>主管撐腰</b>：明確規則＋「失敗我扛」</li><li><b>IT 鋪路</b>：安全的企業版工具</li><li><b>員工擴散</b>：prompt 庫、互相教</li></ul></div>${err}`}
+ const sm=k.match(/^s(\d)$/);
+ if(sm){const i=+sm[1],c=SC[i],sub=subOf(G,i);
+  if(draftFor!==i){d={m:0,it:0,e:0,ban:false,why:''};confirming=false;draftFor=i}
+  if(sub){ph.innerHTML=`${head}<span class="pill soft">情境 ${i+1}・已送出</span>${sub.why!==undefined?`<h3>${pTxt(sub)}</h3><p>「${esc(sub.why)}」</p>`:''}<div class="waiting"><i data-w="EXP"></i><p>三題都做完才揭曉，先看大螢幕</p></div>${flash?`<p class="errline">${flash}</p>`:''}`}
+  else{const left=3-d.m-d.it-d.e;
+   const lev=(id,sub2)=>`<div class="lever ${id}"><div><b>${LEVER[id]}</b><small>${sub2}</small></div><div class="stp"><button data-l="${id}" data-d="-1" aria-label="減少${LEVER[id]}">−</button><b>${d[id]}</b><button data-l="${id}" data-d="1" aria-label="增加${LEVER[id]}">＋</button></div></div>`;
+   ph.innerHTML=`${head}<span class="pill soft">情境 ${i+1} / 3</span><h3>${c.title}</h3><p>${c.co}</p>
+    <div class="box"><span class="t">關鍵數據</span><ul>${c.facts.map(f=>`<li><b>${f[0]}</b> ${f[1]}</li>`).join('')}</ul></div>
+    <div class="box"><span class="t">事件</span><p style="color:var(--ink)">${c.event}</p></div>
+    <div class="box"><span class="t">你們的決策・剩 ${d.ban?0:left} 點</span>
+     ${d.ban?'<p>已選全面禁用，三根槓桿都不能用</p>':lev('m','規則＋「失敗我扛」')+lev('it','安全的企業版工具')+lev('e','prompt 庫、互相教')}
+     <button class="opt ${d.ban?'sel':''}" data-ban="1">${d.ban?'✓ ':''}全面禁用 AI（不花點數）</button>
+     <textarea id="why" rows="2" maxlength="30" placeholder="一句話理由（30 字內）">${esc(d.why)}</textarea></div>
+    ${confirming?`<div class="confirm"><b>確定送出？</b>${pTxt(d)}<br>送出後全組都不能改<div class="row" style="gap:8px"><button class="btn" id="yes" ${sending?'disabled':''}>${sending?'送出中…':'確定送出'}</button><button class="btn ghost" id="no">再想想</button></div></div>`
+     :`<button class="btn" id="sub" ${(!d.ban&&left>0)||!d.why.trim()?'disabled':''}>送出本組決策</button><p id="subhint">${(!d.ban&&left>0)?'3 點要用完':!d.why.trim()?'寫一句理由才能送出':''}</p>`}
+    ${flash?`<p class="errline">${flash}</p>`:''}${err}`}}
+ if(k==='reveal'||k==='clue'){const t=classify(G),T=TYPES[t];
+  ph.innerHTML=`${head}<div class="waiting"><i data-w="${t}" data-u="6"></i><h3>第 ${G} 組是<br>${T.name}</h3><p>${T.tag}</p><button class="btn" id="mycard">打開我們的圖卡</button>
+   ${k==='clue'?'<p>每一種角色都有擅長的地方，沒有哪一隻最好</p>':''}</div>${err}`;
+  if(k==='reveal'&&popShownFor!==G){popShownFor=G;openPop($('pop'),t,G)}}
+ ph.querySelectorAll('[data-w]').forEach(e=>e.replaceWith(charCanvas(e.dataset.w,+e.dataset.u||5)));
+}
+
+function render(){if(MODE==='host')renderHost();else renderPlayer()}
+
+/* ---------- events ---------- */
+document.addEventListener('input',e=>{if(e.target.id==='why'){d.why=e.target.value;const b=$('sub'),h=$('subhint'),left=3-d.m-d.it-d.e;if(b)b.disabled=(!d.ban&&left>0)||!d.why.trim();if(h)h.textContent=(!d.ban&&left>0)?'3 點要用完':!d.why.trim()?'寫一句理由才能送出':''}});
+document.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
+ if(MODE==='host'){
+  if(b.id==='next')return hostGo(S.step+1);
+  if(b.id==='prev')return hostGo(S.step-1);
+  if(b.id==='reset'){if(!resetArmed){resetArmed=true;b.textContent='再按一次確認清空';setTimeout(()=>{resetArmed=false;b.textContent='重設遊戲'},4000);return}
+   resetArmed=false;b.textContent='重設遊戲';const r=await api('/api/host',{key:HOST_KEY,action:'reset'});if(!r.ok)$('err').textContent=r.error||'重設失敗';return poll()}
+  if(b.dataset.pop){const g=+b.dataset.pop;return openPop($('pop'),classify(g),g)}
+  return}
+ if(b.dataset.g){myGroup=+b.dataset.g;store.set('hero_group',myGroup);api('/api/join',{id:myId,group:myGroup});lastKey='';return poll()}
+ if(b.dataset.regroup){myGroup=null;popShownFor=null;lastKey='';return render()}
+ if(b.id==='mycard')return openPop($('pop'),classify(myGroup),myGroup);
+ if(b.dataset.l&&!d.ban){const id=b.dataset.l,x=+b.dataset.d;if(x>0&&d.m+d.it+d.e>=3)return;d[id]=Math.max(0,d[id]+x);flash='';return render()}
+ if(b.dataset.ban){d.ban=!d.ban;if(d.ban){d.m=d.it=d.e=0}flash='';return render()}
+ if(b.id==='sub'){confirming=true;return render()}
+ if(b.id==='no'){confirming=false;return render()}
+ if(b.id==='yes'&&!sending){sending=true;render();
+  const i=+STEPS[S.step].k[1];const r=await api('/api/submit',{group:myGroup,scenario:i,...d});
+  sending=false;confirming=false;
+  flash=r.ok?'':(r.already?'你們組已經有人先送出了':(r.error||'送出失敗，請再按一次'));
+  lastKey='';return poll()}
+});
+
+if(MODE==='host'){document.body.classList.add('host');$('playerwrap').hidden=true}else{document.body.classList.add('player');$('hostwrap').hidden=true}
+if(myGroup&&MODE==='player')api('/api/join',{id:myId,group:myGroup});
+render();poll();setInterval(poll,2000);
+
+</script>
+</body></html>
