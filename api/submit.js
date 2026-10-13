@@ -10,11 +10,11 @@ export default async function handler(req, res) {
   let m = ban ? 0 : int(b.m), it = ban ? 0 : int(b.it), e = ban ? 0 : int(b.e);
   if (!(g >= 1 && g <= GROUPS) || ![0, 1, 2].includes(sc)) return send(res, 400, { error: '組別或情境不對' });
   if (!ban && !(m + it + e === 3)) return send(res, 400, { error: '3 點要剛好用完' });
-  if (!why || [...why].length > 30) return send(res, 400, { error: '理由要 1 到 30 個字' });
+  if ([...why].length > 30) return send(res, 400, { error: '理由最多 30 個字' });
   try {
     await ensureSchema();
-    const [st] = await sql`select step from game_state where id = 1`;
-    if (st.step !== sc + 2) return send(res, 409, { error: '這一題已經結束了', closed: true });
+    const [st] = await sql`select step, revealed from game_state where id = 1`;
+    if (st.step !== sc + 2 || st.revealed) return send(res, 409, { error: '這一題已經結束了', closed: true });
     const rows = await sql`insert into submissions (group_no, scenario, m, it, e, ban, why)
       values (${g}, ${sc}, ${m}, ${it}, ${e}, ${ban}, ${why})
       on conflict (group_no, scenario) do nothing returning group_no`;

@@ -9,11 +9,13 @@ export default async function handler(req, res) {
     if (action === 'go') {
       const s = Number(step);
       if (!(Number.isInteger(s) && s >= 0 && s < STEP_COUNT)) return send(res, 400, { error: '步驟不對' });
-      await sql`update game_state set step = ${s}, changed_at = now() where id = 1`;
+      await sql`update game_state set step = ${s}, revealed = false, changed_at = now() where id = 1`;
+    } else if (action === 'reveal') {
+      await sql`update game_state set revealed = true where id = 1`;
     } else if (action === 'reset') {
       await sql`delete from submissions`;
       await sql`delete from players`;
-      await sql`update game_state set step = 0, changed_at = now() where id = 1`;
+      await sql`update game_state set step = 0, revealed = false, changed_at = now() where id = 1`;
     } else {
       return send(res, 400, { error: '未知的動作' });
     }
