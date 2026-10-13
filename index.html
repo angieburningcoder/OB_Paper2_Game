@@ -127,6 +127,30 @@ body.player .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
 .qrbox{background:#fff;padding:12px;border-radius:14px;line-height:0;min-width:120px;min-height:120px}
 .url{font-weight:700;margin-top:8px}
 .lineup{flex:none;align-items:start}
+/* scenario card */
+.scard .co{color:var(--muted);font-size:.85em;margin-top:2px}
+.role{display:flex;gap:8px;align-items:baseline;font-weight:700;line-height:1.5}
+.tag{flex:none;background:var(--lav);border-radius:999px;padding:1px 9px;font-size:.8em;font-weight:700}
+.scbody{display:grid;gap:12px}
+body.host .scbody{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
+@media (max-width:900px){body.host .scbody{grid-template-columns:minmax(0,1fr)}}
+.sl{font-size:.78em;font-weight:700;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
+.scard p.story{margin:0 0 6px;color:var(--ink);font-size:1em;line-height:1.75}
+.scard .flist{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:.95em;line-height:1.55}
+.flist li{background:rgba(255,255,255,.75);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
+.flist b,.ask b{color:var(--red-ink)}
+.ask{background:color-mix(in srgb,var(--yellow) 55%,#fff);border-radius:10px;padding:8px 12px;font-weight:700}
+.phone .scard{padding:14px;font-size:15px}
+.phone .scard h3{font-size:18px;line-height:1.4}
+/* rule */
+.levers{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.lv{border-radius:12px;padding:10px 12px;line-height:1.55;font-size:.9em}
+.lv b{display:block;font-size:1.15em;margin-bottom:2px}
+.lv.m{background:color-mix(in srgb,var(--red) 40%,#fff)}.lv.it{background:color-mix(in srgb,var(--blue) 40%,#fff)}.lv.e{background:color-mix(in srgb,var(--green) 50%,#fff)}.lv.ban{background:#eceef3;color:var(--muted)}.lv.ban b{color:var(--ink)}
+.phone .levers{grid-template-columns:minmax(0,1fr);gap:6px}.phone .lv{font-size:13px}
+ol.flow{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:3px;line-height:1.6}
+.phone ol.flow{font-size:13px}
+.phone .lever small{font-size:12px}
 </style></head>
 <body>
 <div id="hostwrap" class="hostwrap">
@@ -146,19 +170,24 @@ body.player .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
 /* HERO 製造機・遊戲設計：筱于 */
 /* ---------- content ---------- */
 const SC=[
- {title:'晶片廠的程式碼外流',co:'星河半導體・研發工程師 1,200 人',
-  facts:[['58%','匿名調查：曾用「私人」AI 帳號處理工作'],['3 起','20 天內的外流事件：程式碼 2 起、會議紀錄 1 起'],['0 套','經過資安審核的 AI 工具'],['−30%','有用 AI 的工程師，除錯時間平均減少']],
-  event:'法務長建議全面禁用 AI，研發處長反對：「禁了大家就改用手機偷用」<br>董事會要你這週拍板',
+ {title:'晶片廠：工程師偷用 AI，程式碼外流了',co:'星河半導體・研發工程師 1,200 人',
+  role:'研發副總，董事會要你這週決定公司的 AI 政策',
+  story:['工程師為了加快除錯，用自己的私人 AI 帳號貼公司程式碼，20 天內出了 3 起外流（程式碼 2 起、會議紀錄 1 起）。','法務長要求全面禁用；研發處長反對：「禁了，大家只會改用手機偷用。」'],
+  facts:['<b>58%</b> 工程師承認用私人 AI 帳號處理工作','有用 AI 的人，除錯時間少了 <b>30%</b>','公司目前<b>沒有任何一套</b>經過資安審核的 AI 工具'],
   lack:'it',clue:'這家公司連一套安全的工具都沒有，沒路可走的時候，再怎麼鼓勵，大家也只能用自己的私人帳號'},
- {title:'不敢說實話的實習生',co:'森語行銷・員工 80 人・平均 29 歲',
-  facts:[['9%','公司去年就買了企業版 AI（資料不外流），登入率只有 9%'],['64%','匿名問卷：其實有在用 AI，大多用私人帳號'],['1 句話','總監在全員大會說過：「用 AI 寫提案就是偷懶」'],['2 週','實習生用 AI 做的提案，讓客戶 2 週內就簽約']],
-  event:'客戶當場問：「這份分析怎麼做的？」實習生回答：「熬夜做的」<br>你是剛上任的營運長',
+ {title:'行銷公司：大家都在用，卻沒人敢承認',co:'森語行銷・員工 80 人・平均 29 歲',
+  role:'剛上任的營運長',
+  story:['實習生用 AI 做的提案，讓客戶 2 週就簽約。客戶問：「這份分析怎麼做的？」實習生卻說：「熬夜做的。」','因為總監曾在全員大會上說過：「用 AI 寫提案就是偷懶。」'],
+  facts:['公司去年就買了資料不外流的企業版 AI，但只有 <b>9%</b> 的人登入過','匿名問卷：<b>64%</b> 的人其實有在用 AI，只是都用私人帳號'],
   lack:'m',clue:'工具早就買好了，缺的是一句「可以用」，大家不敢說，是因為不覺得被允許'},
- {title:'只有五個人會用',co:'宏遠銀行客服中心・客服人員 300 人',
-  facts:[['✓','企業版 AI 已上線，通過資安與法規審核'],['✓','主管公開鼓勵使用，也有清楚的使用守則'],['5 人','真正用得好的人，案件處理時間縮短 40%'],['3 個月','競爭對手預計推出 AI 客服']],
-  event:'其他客服大多試過一次就放棄，理由是「不知道怎麼問」<br>總經理要你在一季內讓整個中心都用起來',
+ {title:'銀行客服：工具有了，只有 5 個人會用',co:'宏遠銀行客服中心・客服人員 300 人',
+  role:'客服中心主任，總經理要你一季內讓全中心都用起來',
+  story:['企業版 AI 已經上線，主管也公開鼓勵使用，但多數客服試一次就放棄，理由是「不知道怎麼問」。'],
+  facts:['✓ 工具已通過資安與法規審核','✓ 主管支持，也有清楚的使用守則','只有 <b>5 人</b>用得好，他們處理案件的時間少了 <b>40%</b>','競爭對手 <b>3 個月</b>後要推出 AI 客服'],
   lack:'e',clue:'工具有了、主管也點頭了，卡在只有少數人會用，會的人願意教，才會長出更多會用的人'}];
 const LEVER={m:'主管撐腰',it:'IT 鋪路',e:'員工擴散'};
+const LEVER_DESC={m:'主管公開說「可以用」、訂使用守則、出錯主管扛',it:'導入公司核准、資料不外流的 AI 工具',e:'讓會用的人教大家：分享 prompt、辦讀書會'};
+const ASK='👉 你們有 <b>3 點資源</b>，要投在哪裡？';
 
 const TYPES={
  GRD:{name:'城牆守衛',code:'GRD',bg:'#abd8f0',tag:'先把門關好，再談冒險',traits:['風險意識高','重視規範','穩健保守'],
@@ -335,8 +364,13 @@ document.addEventListener('click',e=>{const cl=e.target.closest('[data-close]');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$('pop').innerHTML=''});
 
 /* ---------- shared stage pieces ---------- */
-function scenarioCard(c){return `<div class="scard"><h3>${c.title}</h3><div style="color:var(--muted);font-size:.9em">${c.co}</div>
- <div class="facts">${c.facts.map(f=>`<div class="fact"><b>${f[0]}</b>${f[1]}</div>`).join('')}</div><div>${c.event}</div></div>`}
+function scenarioCard(c){return `<div class="scard"><div><h3>${c.title}</h3><div class="co">${c.co}</div></div>
+ <div class="role"><span class="tag">你是</span>${c.role}</div>
+ <div class="scbody"><div><div class="sl">發生什麼事</div>${c.story.map(t=>`<p class="story">${t}</p>`).join('')}</div>
+  <div><div class="sl">現況</div><ul class="flist">${c.facts.map(f=>`<li>${f}</li>`).join('')}</ul></div></div>
+ <div class="ask">${ASK}</div></div>`}
+const leverCards=()=>`<div class="levers">${['m','it','e'].map(k=>`<div class="lv ${k}"><b>${LEVER[k]}</b>${LEVER_DESC[k]}</div>`).join('')}
+ <div class="lv ban"><b>或者：全面禁用</b>不投任何資源，公司內禁止用 AI（選了就不能再投點）</div></div>`;
 
 /* ---------- HOST (big screen) ---------- */
 let qrDone=false,resetArmed=false;
@@ -358,13 +392,11 @@ function renderHost(){
   else $('qr').textContent=location.origin;
  }
  if(k==='rule'){
-  st.innerHTML=`<div class="eyebrow">遊戲規則</div><h2>三間公司、三種 AI 困境，每次 3 點，分給你覺得最需要的地方</h2>
-   <div class="facts">
-    <div class="fact"><b>主管撐腰</b>明確規則，公開說「可以用，失敗我扛」</div>
-    <div class="fact"><b>員工擴散</b>prompt 庫、讀書會，讓會用的人教別人</div>
-    <div class="fact"><b>IT 鋪路</b>提供安全的企業版工具，資安把關</div>
-    <div class="fact"><b>全面禁用</b>不花點數，三根槓桿都不能用</div></div>
-   <div class="scard">沒有標準答案，也不打分數<br>每題 4 分鐘，組內討論後由任何一人送出<br>三題做完，會依照你們的選擇測出這組的「決策風格」</div>`;
+  st.innerHTML=`<div class="eyebrow">遊戲規則</div><h2>你們是公司的決策者<br>每題有 3 點資源，投給你們覺得最該先做的事</h2>
+   ${leverCards()}
+   <div class="scard"><div><b>怎麼投：</b>例如「主管 2、IT 1、員工 0」，也可以 3 點全押同一個</div>
+    <ol class="flow"><li>每題 4 分鐘，組內討論</li><li>任一人用手機送出（送出就鎖定）</li><li>三題結束後，揭曉你們這組的決策風格</li></ol>
+    <div class="co">沒有標準答案，也不打分數</div></div>`;
  }
  const sm=k.match(/^s(\d)$/);
  if(sm){const i=+sm[1];
@@ -399,19 +431,21 @@ function renderPlayer(){
    <p style="margin-top:auto;font-size:12px">遊戲設計｜筱于</p>`;return}
  const G=myGroup,head=`<div class="ptop"><span class="pill">第 ${G} 組</span><button class="link" data-regroup="1">換組</button></div>`;
  if(k==='join'){ph.innerHTML=`${head}<div class="waiting"><i data-w="BAL"></i><h3>第 ${G} 組報到完成</h3><p>等主持人開始</p></div>${err}`}
- if(k==='rule'){ph.innerHTML=`${head}<h3>規則</h3><ul><li>每題 4 分鐘，組內討論後由<b>任何一人</b>送出，送出就鎖定</li><li>3 點分給三根槓桿，也可以選全面禁用</li><li>可以附一句理由（選填），揭曉時會出現在你們的角色旁邊</li><li>沒有標準答案，也不打分數</li></ul>
-   <div class="box"><span class="t">三根槓桿</span><ul><li><b>主管撐腰</b>：明確規則＋「失敗我扛」</li><li><b>IT 鋪路</b>：安全的企業版工具</li><li><b>員工擴散</b>：prompt 庫、互相教</li></ul></div>${err}`}
+ if(k==='rule'){ph.innerHTML=`${head}<h3>你們是公司的決策者<br>每題有 3 點資源，投給最該先做的事</h3>
+   ${leverCards()}
+   <div class="box"><span class="t">怎麼玩</span><ol class="flow"><li>每題 4 分鐘，組內討論</li><li><b>任一人</b>送出就好，送出就鎖定</li><li>可附一句理由（選填）</li><li>三題後揭曉你們的決策風格</li></ol></div>
+   <p>例：主管 2、IT 1、員工 0，也可以 3 點全押一個。沒有標準答案</p>${err}`}
  const sm=k.match(/^s(\d)$/);
  if(sm){const i=+sm[1],c=SC[i],sub=subOf(G,i);
   if(draftFor!==i){d={m:0,it:0,e:0,ban:false,why:''};confirming=false;draftFor=i}
   if(sub){ph.innerHTML=`${head}<span class="pill soft">情境 ${i+1}・已送出</span>${sub.why!==undefined?`<h3>${pTxt(sub)}</h3>${sub.why?`<p>「${esc(sub.why)}」</p>`:''}`:''}<div class="waiting"><i data-w="EXP"></i><p>${S.revealed?'本題已揭曉，看大螢幕':'等主持人揭曉，先看大螢幕'}</p></div>${flash?`<p class="errline">${flash}</p>`:''}`}
   else if(S.revealed){ph.innerHTML=`${head}<span class="pill soft">情境 ${i+1}・已結束</span><div class="waiting"><p>本題已揭曉，這題沒有送出</p></div>${err}`}
   else{const left=3-d.m-d.it-d.e;
-   const lev=(id,sub2)=>`<div class="lever ${id}"><div><b>${LEVER[id]}</b><small>${sub2}</small></div><div class="stp"><button data-l="${id}" data-d="-1" aria-label="減少${LEVER[id]}">−</button><b>${d[id]}</b><button data-l="${id}" data-d="1" aria-label="增加${LEVER[id]}">＋</button></div></div>`;
+   const lev=id=>`<div class="lever ${id}"><div><b>${LEVER[id]}</b><small>${LEVER_DESC[id]}</small></div><div class="stp"><button data-l="${id}" data-d="-1" aria-label="減少${LEVER[id]}">−</button><b>${d[id]}</b><button data-l="${id}" data-d="1" aria-label="增加${LEVER[id]}">＋</button></div></div>`;
    ph.innerHTML=`${head}<span class="pill soft">情境 ${i+1} / 3</span>${scenarioCard(c)}
-    <div class="box"><span class="t">你們的決策・剩 ${d.ban?0:left} 點</span>
-     ${d.ban?'<p>已選全面禁用，三根槓桿都不能用</p>':lev('m','規則＋「失敗我扛」')+lev('it','安全的企業版工具')+lev('e','prompt 庫、互相教')}
-     <button class="opt ${d.ban?'sel':''}" data-ban="1">${d.ban?'✓ ':''}全面禁用 AI（不花點數）</button>
+    <div class="box"><span class="t">你們的決策・還剩 ${d.ban?0:left} 點可投</span>
+     ${d.ban?'<p>已選全面禁用，三根槓桿都不能用</p>':lev('m')+lev('it')+lev('e')}
+     <button class="opt ${d.ban?'sel':''}" data-ban="1">${d.ban?'✓ ':''}全面禁用 AI（不投點，公司內禁止使用）</button>
      <textarea id="why" rows="2" maxlength="30" placeholder="一句話理由（選填，30 字內）">${esc(d.why)}</textarea></div>
     ${confirming?`<div class="confirm"><b>確定送出？</b>${pTxt(d)}<br>送出後全組都不能改<div class="row" style="gap:8px"><button class="btn" id="yes" ${sending?'disabled':''}>${sending?'送出中…':'確定送出'}</button><button class="btn ghost" id="no">再想想</button></div></div>`
      :`<button class="btn" id="sub" ${(!d.ban&&left>0)?'disabled':''}>送出本組決策</button><p id="subhint">${(!d.ban&&left>0)?'3 點要用完':''}</p>`}
