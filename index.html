@@ -114,7 +114,10 @@ body.host .scbody{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
 .scard p.story{margin:0 0 6px;color:var(--ink);font-size:1em;line-height:1.75}
 .scard .flist{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:.95em;line-height:1.55}
 .flist li{background:rgba(255,255,255,.75);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
-.flist b,.ask b{color:var(--red-ink)}
+.ask b{color:var(--red-ink)}
+.flist li.m{border-left:5px solid var(--red)}.flist li.it{border-left:5px solid var(--blue)}.flist li.e{border-left:5px solid var(--green)}
+.flist .vk{font-size:.75em;font-weight:700;color:var(--muted);margin-right:6px}.flist .vw{margin-right:2px}
+.flist small{display:block;color:var(--muted);font-size:.85em;margin-top:2px}
 .ask{background:color-mix(in srgb,var(--yellow) 55%,#fff);border-radius:10px;padding:8px 12px;font-weight:700}
 .phone .scard{padding:14px;font-size:15px}
 .phone .scard h3{font-size:18px;line-height:1.4}
@@ -169,20 +172,23 @@ body.host .clue p{font-size:.9em}
 /* ---------- content ---------- */
 const SC=[
  {title:'晶片廠：工程師偷用 AI，程式碼外流了',co:'星河半導體・研發工程師 1,200 人',
-  role:'研發副總，董事會要你這週決定公司的 AI 政策',
-  story:['工程師為了加快除錯，用自己的私人 AI 帳號貼公司程式碼，20 天內出了 3 起外流（程式碼 2 起、會議紀錄 1 起）。','法務長要求全面禁用；研發處長反對：「禁了，大家只會改用手機偷用。」'],
-  facts:['<b>58%</b> 工程師承認用私人 AI 帳號處理工作','有用 AI 的人，除錯時間少了 <b>30%</b>','公司目前<b>沒有任何一套</b>經過資安審核的 AI 工具'],
-  lack:'it',clue:'這家公司連一套安全的工具都沒有，沒路可走的時候，再怎麼鼓勵，大家也只能用自己的私人帳號'},
+  role:'研發副總，這週要決定公司的 AI 政策',
+  story:['工程師用私人 AI 帳號貼程式碼除錯，一個月內外流了 3 次。法務長主張：全面禁用。'],
+  voices:[{k:'m',who:'人資長',say:'主管公開訂好界線：哪些能貼、哪些不能，出事主管扛。',cost:'沒有安全的工具，規矩只能叫大家忍著不用'},
+   {k:'it',who:'資訊長',say:'買一套資料不外流的企業版 AI，從源頭解決。',cost:'要半年導入，還要一大筆預算'},
+   {k:'e',who:'研發處長',say:'讓會用的工程師帶大家，教怎麼去掉敏感資料再問 AI。',cost:'還是在用私人帳號，風險沒有歸零'}]},
  {title:'行銷公司：大家都在用，卻沒人敢承認',co:'森語行銷・員工 80 人・平均 29 歲',
   role:'剛上任的營運長',
-  story:['實習生用 AI 做的提案，讓客戶 2 週就簽約。客戶問：「這份分析怎麼做的？」實習生卻說：「熬夜做的。」','因為總監曾在全員大會上說過：「用 AI 寫提案就是偷懶。」'],
-  facts:['公司去年就買了資料不外流的企業版 AI，但只有 <b>9%</b> 的人登入過','匿名問卷：<b>64%</b> 的人其實有在用 AI，只是都用私人帳號'],
-  lack:'m',clue:'工具早就買好了，缺的是一句「可以用」，大家不敢說，是因為不覺得被允許'},
- {title:'銀行客服：工具有了，只有 5 個人會用',co:'宏遠銀行客服中心・客服人員 300 人',
+  story:['總監說過「用 AI 寫提案就是偷懶」。實習生用 AI 做的提案讓客戶簽約了，卻說是熬夜做的。總監主張：乾脆禁用，品質才有保障。'],
+  voices:[{k:'m',who:'執行長',say:'由我在全員大會公開說可以用，用了被罵算我的。',cost:'總監會覺得被打臉，團隊可能分成兩派'},
+   {k:'it',who:'資訊主管',say:'去年買的企業版只有 9% 登入，太難用了。換一套接進提案系統的工具。',cost:'又要花錢，而且大家不用可能不是因為工具'},
+   {k:'e',who:'實習生',say:'讓我公開分享怎麼用 AI 做提案，辦每週讀書會。',cost:'總監還在，敢上台分享的人可能很少'}]},
+ {title:'銀行客服：工具有了，大家卻用不起來',co:'宏遠銀行客服中心・客服人員 300 人',
   role:'客服中心主任，總經理要你一季內讓全中心都用起來',
-  story:['企業版 AI 已經上線，主管也公開鼓勵使用，但多數客服試一次就放棄，理由是「不知道怎麼問」。'],
-  facts:['✓ 工具已通過資安與法規審核','✓ 主管支持，也有清楚的使用守則','只有 <b>5 人</b>用得好，他們處理案件的時間少了 <b>40%</b>','競爭對手 <b>3 個月</b>後要推出 AI 客服'],
-  lack:'e',clue:'工具有了、主管也點頭了，卡在只有少數人會用，會的人願意教，才會長出更多會用的人'}];
+  story:['AI 工具已經上線，但多數客服試一次就放棄：「不知道怎麼問。」法遵主管主張：AI 答錯一次就可能被罰款，不如先停用。'],
+  voices:[{k:'m',who:'營運副總',say:'主管帶頭每天用，訂好守則，答錯算主管的。',cost:'主管其實已經鼓勵過了，再喊一次可能沒什麼差別'},
+   {k:'it',who:'資訊部',say:'把常見問題做成範本和一鍵按鈕，不用自己想怎麼問。',cost:'要 3 個月開發，對手的 AI 客服也是 3 個月後上線'},
+   {k:'e',who:'小組長',say:'讓已經很會用的 5 個人當小老師，每人帶一個班。',cost:'這 5 個人手上的案件會變慢，績效受影響'}]}];
 const LEVER={m:'主管撐腰',it:'IT 鋪路',e:'員工擴散'};
 const LEVER_DESC={m:'主管公開說「可以用」、訂使用守則、出錯主管扛',it:'導入公司核准、資料不外流的 AI 工具',e:'讓會用的人教大家：分享 prompt、辦讀書會'};
 const ASK='👉 你們有 <b>3 點資源</b>，要投在哪裡？';
@@ -197,7 +203,7 @@ const TYPES={
  MEN:{name:'火把導師',code:'MEN',bg:'#cfe3a6',tag:'一個人會不算會，大家會才算',traits:['樂於分享','團隊學習','由下而上'],
   paper:'你們像拿著火把的人，自己先點亮，再一根一根傳下去',think:'第一把火，需要誰先點頭讓它點起來？',mate:'GRD'},
  BAL:{name:'四色魔法師',code:'BAL',bg:'#d8d1f2',tag:'每一方都照顧到，誰都不落下',traits:['顧全大局','重視公平','協調力強'],
-  paper:'你們像把每道菜都顧好的主廚，人、規則、工具一樣都不少',think:'三樣都顧到很周到，但如果這間公司其實只缺其中一樣呢？',mate:'EXP'},
+  paper:'你們像把每道菜都顧好的主廚，人、規則、工具一樣都不少',think:'什麼都顧到的時候，大家知道第一步該從哪裡開始嗎？',mate:'EXP'},
  EXP:{name:'地圖探險家',code:'EXP',bg:'#bfe6da',tag:'每張地圖都不一樣，先看再走',traits:['彈性應變','善於觀察','因地制宜'],
   paper:'你們像每到一張新地圖就先看地形的玩家，這關缺什麼就補什麼',think:'一直換路線的時候，團隊需要一個不變的方向嗎？',mate:'BAL'}};
 
@@ -308,7 +314,7 @@ async function makeCard(type,g){
 
 /* ---------- live data ---------- */
 const GROUPS=5;
-const STEPS=[{k:'join',name:'掃碼選組'},{k:'rule',name:'遊戲規則'},{k:'s0',name:'情境 1'},{k:'s1',name:'情境 2'},{k:'s2',name:'情境 3'},{k:'reveal',name:'角色揭曉'},{k:'clue',name:'情境線索'}];
+const STEPS=[{k:'join',name:'掃碼選組'},{k:'rule',name:'遊戲規則'},{k:'s0',name:'情境 1'},{k:'s1',name:'情境 2'},{k:'s2',name:'情境 3'},{k:'reveal',name:'角色揭曉'},{k:'clue',name:'論文觀點'}];
 const SCENARIO_SECONDS=240;
 const HOST_KEY=new URLSearchParams(location.search).get('host');
 const MODE=HOST_KEY?'host':'player';
@@ -365,7 +371,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')$('pop').innerHTML='
 function scenarioCard(c){return `<div class="scard"><div><h3>${c.title}</h3><div class="co">${c.co}</div></div>
  <div class="role"><span class="tag">你是</span>${c.role}</div>
  <div class="scbody"><div><div class="sl">發生什麼事</div>${c.story.map(t=>`<p class="story">${t}</p>`).join('')}</div>
-  <div><div class="sl">現況</div><ul class="flist">${c.facts.map(f=>`<li>${f}</li>`).join('')}</ul></div></div>
+  <div><div class="sl">三個提案</div><ul class="flist">${c.voices.map(v=>`<li class="${v.k}"><span class="vk">${LEVER[v.k]}</span><b class="vw">${v.who}</b>「${v.say}」<small>代價：${v.cost}</small></li>`).join('')}</ul></div></div>
  <div class="ask">${ASK}</div></div>`}
 const leverCards=()=>`<div class="levers">${['m','it','e'].map(k=>`<div class="lv ${k}"><b>${LEVER[k]}</b>${LEVER_DESC[k]}</div>`).join('')}
  <div class="lv ban"><b>或者：全面禁用</b>不投任何資源，公司內禁止用 AI（選了就不能再投點）</div></div>`;
@@ -409,8 +415,10 @@ function renderHost(){
   st.querySelectorAll('[data-c]').forEach(e=>e.replaceWith(charCanvas(e.dataset.c,5)));
  }
  if(k==='clue'){const gs=activeGroups();
-  st.innerHTML=`<div class="eyebrow">三張地圖裡藏的線索</div><h2>工具換了，問題沒變：先看公司缺哪一方</h2>
-   <div>${SC.map((c,i)=>`<div class="clue"><p><b>${c.title}</b>：缺的是「${LEVER[c.lack]}」，${c.clue}</p>
+  st.innerHTML=`<div class="eyebrow">論文觀點</div><h2>HERO 需要三方一起撐</h2>
+   <div class="scard"><p style="margin:0;line-height:1.75">Bernoff &amp; Schadler 在《Empowered》提出「HERO 契約」：員工想用新科技解決問題，需要<b>主管授權撐腰</b>、<b>IT 提供安全的工具</b>，還有<b>員工自己動手並互相帶動</b>，三方缺一不可。</p>
+    <p style="margin:0;line-height:1.75">每家公司的起點不同，先押哪一方沒有標準答案。比較重要的是：你們先押了一方之後，另外兩方打算怎麼補上？</p></div>
+   <div>${SC.map((c,i)=>`<div class="clue"><p><b>${c.title}</b><br>你們先押了什麼？另外兩方之後要怎麼補上？</p>
      <div class="ans sm">${gs.map(g=>ansRow(g,i,false)).join('')}</div></div>`).join('')}</div>
    <div class="eyebrow">六種決策風格・點角色看介紹</div>
    <div class="dex">${Object.entries(TYPES).map(([t,T])=>`<button data-intro="${t}" style="background:color-mix(in srgb,${T.bg} 55%,#fff)"><i data-c="${t}"></i><br>${T.name}</button>`).join('')}</div>
