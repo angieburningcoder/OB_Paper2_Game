@@ -69,7 +69,10 @@ body.host .dex button{font-size:.8em}
 .sum{display:grid;grid-template-columns:5em repeat(3,minmax(0,1fr));gap:6px 12px;align-items:end}
 .sum>b{white-space:nowrap}.sum .bar{height:1.9em;font-size:.85em}
 .sum .sall{border-top:2px solid var(--line);padding-top:8px;align-self:stretch;display:flex;flex-direction:column;justify-content:flex-end;gap:4px}
-.stop{font-weight:700;font-size:.85em}
+.stop{font-weight:700;font-size:.85em}.stop b{font-size:1.35em;font-weight:900}
+.tot{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:6px 0 8px}
+.tot span{border-radius:10px;padding:6px 12px;display:flex;align-items:baseline;justify-content:space-between;gap:.5em;white-space:nowrap}
+.ask .tot b{font:900 2.1em/1 var(--round);color:var(--ink);font-variant-numeric:tabular-nums}.tot small{font-size:.45em}
 /* phone */
 .phone{background:var(--glass-strong);backdrop-filter:blur(14px);border:8px solid var(--ink);border-radius:32px;padding:16px 14px;height:640px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;max-width:320px;width:100%;justify-self:center;position:relative}
 .phone h3{margin:0;font:900 17px/1.4 var(--round)}
@@ -189,7 +192,10 @@ ol.flow{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:3px;l
 .arow{display:grid;grid-template-columns:5em minmax(0,1fr);column-gap:12px;row-gap:2px;align-items:center}
 .arow>b{font-weight:900;white-space:nowrap}
 .bar{display:flex;gap:3px;height:2.3em;border-radius:10px;overflow:hidden}
-.bar span{display:flex;align-items:center;justify-content:center;min-width:0;font-weight:700;white-space:nowrap;overflow:hidden}
+.bar span{display:flex;align-items:center;justify-content:center;gap:.3em;min-width:0;font-weight:700;white-space:nowrap;overflow:hidden;container-type:inline-size}
+.bar em{font-style:normal;font-size:.8em;opacity:.75}
+.bar b{font:900 1.4em/1 var(--round);font-variant-numeric:tabular-nums}
+@container (max-width:4.5em){.bar em{display:none}}
 .s-m{background:var(--red)}.s-it{background:var(--blue)}.s-e{background:var(--green)}.s-ban{background:#c3c8d3}
 .s-miss{flex:1;border:2px dashed var(--line);border-radius:10px;color:var(--muted)}
 .awhy{grid-column:2;color:var(--muted);font-size:.85em}
@@ -602,8 +608,8 @@ function sumTable(gs){
  const agg=SC.map((c,i)=>{const a={m:0,it:0,e:0,ban:0};gs.forEach(g=>{const p=plan(g,i);if(p.missing)return;if(p.ban)a.ban++;else keys.forEach(k=>a[k]+=p[k])});keys.concat('ban').forEach(k=>tot[k]+=a[k]);return a});
  const aggCell=a=>{const mx=Math.max(a.m,a.it,a.e),n=a.m+a.it+a.e+a.ban;
   if(!n)return'<div class="co">還沒有資料</div>';
-  const top=mx?`最多押「${keys.filter(k=>a[k]===mx).map(k=>NM[k]).join('」「')}」（${mx} 點）`:'全部選了全面禁用';
-  return`<div class="stop">${top}</div><div class="bar">${keys.filter(k=>a[k]).map(k=>`<span class="s-${k}" style="flex:${a[k]}">${{m:'主管',it:'IT',e:'高手'}[k]} ${a[k]}</span>`).join('')}${a.ban?`<span class="s-ban" style="flex:${a.ban*3}">禁用 ${a.ban} 組</span>`:''}</div>`};
+  const top=mx?`最多押「${keys.filter(k=>a[k]===mx).map(k=>NM[k]).join('」「')}」（<b>${mx}</b> 點）`:'全部選了全面禁用';
+  return`<div class="stop">${top}</div><div class="bar">${keys.filter(k=>a[k]).map(k=>seg(k,a[k])).join('')}${a.ban?`<span class="s-ban" style="flex:${a.ban*3}"><em>禁用</em><b>${a.ban}</b><em>組</em></span>`:''}</div>`};
  const LB={m:'「主管撐腰」',it:'「IT 鋪路」',e:'「高手帶路」（員工）'},
   GAP={m:'沒有主管給清楚規則、不懲罰試錯，員工還是不敢說出來（52% 不願承認在用 AI）',it:'沒有安全的企業版 AI，員工只能繼續用私人帳號，風險公司看不到',e:'沒有員工站出來分享 prompt，個人技巧變不成團隊知識'};
  const pts=tot.m+tot.it+tot.e,mn=Math.min(tot.m,tot.it,tot.e),low=keys.filter(k=>tot[k]===mn),zero=keys.filter(k=>!tot[k]),lines=[];
@@ -616,11 +622,12 @@ function sumTable(gs){
  return`<div class="sum"><span></span>${SC.map(c=>`<b>${c.short}</b>`).join('')}
   ${gs.map(g=>`<b>第 ${g} 組</b>${SC.map((c,i)=>ansBar(plan(g,i))).join('')}`).join('')}
   <b class="sall">全班</b>${agg.map(a=>`<div class="sall">${aggCell(a)}</div>`).join('')}</div>
-  ${pts+tot.ban?`<div class="ask">📊 三題加總：主管 ${tot.m}・IT ${tot.it}・高手（員工）${tot.e}・全面禁用 ${tot.ban} 次${lines.map(l=>`<br>→ ${l}`).join('')}</div>`:''}`}
+  ${pts+tot.ban?`<div class="ask">📊 三題加總<div class="tot">${keys.map(k=>`<span class="s-${k}">${{m:'主管',it:'IT',e:'高手（員工）'}[k]}<b>${tot[k]}</b></span>`).join('')}<span class="s-ban">全面禁用<b>${tot.ban}<small> 次</small></b></span></div>${lines.map(l=>`→ ${l}`).join('<br>')}</div>`:''}`}
 function ansBar(p){
  if(p.missing)return'<div class="bar"><span class="s-miss">未送出</span></div>';
  if(p.ban)return'<div class="bar"><span class="s-ban" style="flex:3">全面禁用</span></div>';
- return`<div class="bar">${['m','it','e'].filter(k=>p[k]).map(k=>`<span class="s-${k}" style="flex:${p[k]}">${{m:'主管',it:'IT',e:'高手'}[k]} ${p[k]}</span>`).join('')}</div>`}
+ return`<div class="bar">${['m','it','e'].filter(k=>p[k]).map(k=>seg(k,p[k])).join('')}</div>`}
+const seg=(k,n)=>`<span class="s-${k}" style="flex:${n}"><em>${{m:'主管',it:'IT',e:'高手'}[k]}</em><b>${n}</b></span>`;
 function ansRow(g,i,withWhy){const p=plan(g,i);return`<div class="arow"><b>第 ${g} 組</b>${ansBar(p)}${withWhy&&p.why&&!p.missing?`<span class="awhy">「${esc(p.why)}」</span>`:''}</div>`}
 // How classify() lands on each type, in plain words
 const HOWTO={GRD:'三題裡有 2 題以上選全面禁用',EXP:'三題各押了不同的槓桿：主管、IT、高手各一次',BAL:'三題裡有 2 題以上把 3 點平均分給三方',
