@@ -23,7 +23,12 @@ body{background:var(--bg);color:var(--ink);font-family:var(--round);font-size:15
 .btn.ghost{background:var(--glass-strong);color:var(--ink);border:1px solid var(--line)}
 .btn:disabled{opacity:.35;cursor:default}
 button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.timer{font:400 15px var(--pixel);color:var(--muted);margin-left:auto}
+.timer{font:700 1.15em var(--round);color:var(--muted);margin-left:auto;padding:4px 14px;border-radius:999px;font-variant-numeric:tabular-nums}
+.timer:empty{padding:0}
+.timer.share{background:var(--blue);color:var(--ink)}
+.timer.warn{background:var(--yellow);color:var(--ink)}
+.timer.over{background:var(--red-ink);color:#fff;animation:flash 1s ease-in-out infinite}
+@keyframes flash{50%{opacity:.35}}
 .stage{border-radius:18px;min-height:520px;padding:22px 26px;display:flex;flex-direction:column;gap:14px}
 .stage h2{margin:0;font:900 clamp(20px,2.4vw,28px)/1.35 var(--round);text-wrap:balance}
 .eyebrow{font:400 13px var(--pixel);letter-spacing:.12em;color:var(--muted)}
@@ -36,6 +41,12 @@ button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outl
 .g{border:2px dashed var(--line);border-radius:12px;padding:10px;text-align:center;font-size:13px;color:var(--muted)}
 .g.ok{border-style:solid;border-color:#9fc77a;background:color-mix(in srgb,var(--green) 55%,#fff);color:var(--ink)}
 .g b{display:block;font:400 16px var(--pixel);color:var(--ink)}
+.groups.live .g{border-width:3px;animation:breathe 2.2s ease-in-out infinite}
+.groups.live .g.ok{animation:none;box-shadow:0 0 0 4px rgba(159,199,122,.35),0 8px 22px rgba(111,154,63,.35)}
+.groups.live .g.new{animation:okpop .7s cubic-bezier(.2,1.6,.4,1)}
+@keyframes breathe{50%{border-color:var(--accent);background:rgba(91,143,214,.1)}}
+@keyframes okpop{0%{transform:scale(.85)}60%{transform:scale(1.08)}}
+.ans.wide{flex:1;justify-content:center;gap:18px;margin-top:0}.ans.wide .bar{height:3em;font-size:1.1em}.ans.wide .arow>b{font-size:1.15em}.ans.wide .awhy{font-size:1em}
 .lineup{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;flex:1}
 @media (max-width:700px){.lineup{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .who{border:0;border-radius:16px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font-family:var(--round);color:var(--ink);text-align:center;transition:transform .2s}
@@ -85,7 +96,7 @@ textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-ra
 .pop .hint{font-size:12px;color:var(--muted);text-align:center;margin:0}
 .phone .pop{position:absolute;border-radius:24px}
 @keyframes popin{from{transform:scale(.6);opacity:0}}
-@media (prefers-reduced-motion:reduce){.waiting canvas,.sil canvas,.pop .in{animation:none}.who{transition:none}}
+@media (prefers-reduced-motion:reduce){.timer,.groups.live .g,.waiting canvas,.sil canvas,.pop .in{animation:none}.who{transition:none}}
 
 html,body{height:100%}
 .hostwrap{height:100vh;display:flex;flex-direction:column;gap:12px;padding:16px;box-sizing:border-box}
@@ -151,7 +162,7 @@ body.host .flist .vk{font-size:1.05em;font-weight:900;color:var(--ink);letter-sp
 .rex{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
 .rex .sl{margin:0}
 .chip{display:inline-flex;align-items:center;gap:.5em;background:var(--glass-strong);border:1px solid var(--line);border-radius:999px;padding:4px 14px;font-weight:700}
-.rsteps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.rsteps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .rsteps li{background:var(--glass-strong);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;color:var(--muted);line-height:1.5}
 .rsteps i{grid-row:span 2;width:2em;height:2em;border-radius:50%;background:var(--ink);color:#fff;font-style:normal;font-weight:900;display:flex;align-items:center;justify-content:center}
 .rsteps b{color:var(--ink);font-size:1.15em}
@@ -184,7 +195,7 @@ ol.flow{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:3px;l
     <button class="btn ghost" id="reset">重設遊戲</button>
     <button class="btn ghost" id="prev">上一步</button>
     <span id="stepname"></span><span class="timer" id="timer"></span><span id="err" class="errline"></span>
-    <button class="btn ghost" id="reveal" hidden>揭曉本題</button>
+    <button class="btn ghost" id="share" hidden>▶ 分享計時 1 分鐘</button><button class="btn ghost" id="reveal" hidden>揭曉本題</button>
     <button class="btn" id="next">下一步</button>
   </div>
 </div>
@@ -216,7 +227,7 @@ const SC=[
    {k:'it',who:'資訊部',say:'把常見問題做成範本和一鍵按鈕，不用自己想怎麼問。',cost:'要 3 個月開發，對手的 AI 客服也是 3 個月後上線'},
    {k:'e',who:'小組長',say:'讓已經很會用的 5 個人當小老師，每人帶一個班。',cost:'這 5 個人手上的案件會變慢，績效受影響'},
    {k:'ban',who:'法遵主管',say:'AI 答錯一次就可能被罰款，先停用。',cost:'對手 3 個月後上線，我們會落後'}]}];
-const LEVER={m:'主管撐腰',it:'IT 鋪路',e:'員工擴散'};
+const LEVER={m:'主管撐腰',it:'IT 鋪路',e:'高手帶路'};
 const LEVER_DESC={m:'主管公開說「可以用」、訂使用守則、出錯主管扛',it:'導入公司核准、資料不外流的 AI 工具',e:'讓會用的人教大家：分享 prompt、辦讀書會'};
 const ASK='👉 每組有 <b>3 點</b>，投給前三個提案；或選全面禁用（選了就不能投點）';
 
@@ -266,7 +277,7 @@ function charCanvas(type,u=5){const c=document.createElement('canvas');c.width=c
 /* ---------- shareable card (1080×1350) ---------- */
 const NOSTART='，。：；、！？」）』…';function wrapText(ctx,t,x,y,maxW,lh){let line='',yy=y;for(const ch of t){if(ctx.measureText(line+ch).width>maxW&&line&&!NOSTART.includes(ch)){ctx.fillText(line,x,yy);line=ch;yy+=lh}else line+=ch}ctx.fillText(line,x,yy);return yy+lh}
 const LC={m:'#e99a8a',it:'#86bde0',e:'#a6c978',ban:'#c3c8d3'};
-const NM={m:'主管撐腰',it:'IT 鋪路',e:'員工擴散',ban:'全面禁用',bal:'平均分配'};
+const NM={m:'主管撐腰',it:'IT 鋪路',e:'高手帶路',ban:'全面禁用',bal:'平均分配'};
 function stats(g){
  const ps=[0,1,2].map(i=>plan(g,i)),ds=ps.map(dom),t={m:0,it:0,e:0};
  ps.forEach(p=>{if(!p.ban){t.m+=p.m;t.it+=p.it;t.e+=p.e}});
@@ -325,7 +336,7 @@ async function makeCard(type,g){
   x.textAlign='left';x.fillStyle=MU;x.font=F(700,22);x.fillText(`情境 ${i+1}・${sc.title}`,bx,y);
   if(p.missing){rr(bx,y+14,bw,40,12,'rgba(43,48,70,.08)');x.fillStyle=MU;x.font=F(700,22);x.fillText('這題沒有送出',bx+16,y+42)}else if(p.ban){rr(bx,y+14,bw,40,12,LC.ban);x.fillStyle=INK;x.font=F(700,22);x.fillText('全面禁用',bx+16,y+42)}
   else{let sx=bx;keys.forEach(kk=>{const w=bw*p[kk]/3;if(w>0){rr(sx+2,y+14,w-4,40,12,LC[kk]);x.fillStyle=INK;x.font=F(700,22);if(w>60)x.fillText(`${p[kk]}`,sx+16,y+42)}sx+=w})}});
- let lx=bx;x.font=F(500,22);[['m','主管'],['it','IT'],['e','員工'],['ban','禁用']].forEach(([kk,l])=>{rr(lx,1730,22,22,6,LC[kk]);x.fillStyle=SUB;x.textAlign='left';x.fillText(l,lx+30,1749);lx+=x.measureText(l).width+64});
+ let lx=bx;x.font=F(500,22);[['m','主管'],['it','IT'],['e','高手'],['ban','禁用']].forEach(([kk,l])=>{rr(lx,1730,22,22,6,LC[kk]);x.fillStyle=SUB;x.textAlign='left';x.fillText(l,lx+30,1749);lx+=x.measureText(l).width+64});
  // 3. why
  title(1830,'為什麼是你們');
  x.textAlign='left';x.fillStyle=INK;x.font=F(700,30);let y=wrapText(x,whyLine(type,S),100,1885,W-200,44);
@@ -342,7 +353,8 @@ async function makeCard(type,g){
 /* ---------- live data ---------- */
 const GROUPS=5;
 const STEPS=[{k:'join',name:'掃碼選組'},{k:'rule',name:'遊戲規則'},{k:'s0',name:'情境 1'},{k:'s1',name:'情境 2'},{k:'s2',name:'情境 3'},{k:'reveal',name:'角色揭曉'},{k:'clue',name:'論文觀點'}];
-const SCENARIO_SECONDS=240;
+const SCENARIO_SECONDS=240,SHARE_SECONDS=60;
+let shareEnd=null,shareStep=-1;
 const HOST_KEY=new URLSearchParams(location.search).get('host');
 const MODE=HOST_KEY?'host':'player';
 let S={step:0,revealed:false,players:[],subs:[],changedAt:null,offset:0,loaded:false,error:''};
@@ -352,7 +364,7 @@ let myGroup=Number(store.get('hero_group'))||null;
 const MISSING={m:1,it:1,e:1,ban:false,why:'（這題沒有送出）',missing:true};
 const subOf=(g,i)=>S.subs.find(x=>x.group_no===g&&x.scenario===i);
 const plan=(g,i)=>{const s=subOf(g,i);return s&&s.why!==undefined?s:MISSING};
-const pTxt=p=>p.missing?'未送出':p.ban?'全面禁用':`主管 ${p.m}・IT ${p.it}・員工 ${p.e}`;
+const pTxt=p=>p.missing?'未送出':p.ban?'全面禁用':`主管 ${p.m}・IT ${p.it}・高手 ${p.e}`;
 function dom(p){if(p.ban)return'ban';const mx=Math.max(p.m,p.it,p.e);if(mx===1)return'bal';return['m','it','e'].find(k=>p[k]===mx)}
 function classify(g){
  const ps=[0,1,2].map(i=>plan(g,i)),ds=ps.map(dom);
@@ -383,7 +395,11 @@ async function poll(){
 }
 function remaining(){if(!S.changedAt)return null;const el=(Date.now()+S.offset-Date.parse(S.changedAt))/1000;return Math.max(0,Math.ceil(SCENARIO_SECONDS-el))}
 const fmt=s=>`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
-setInterval(()=>{const t=$('timer');if(!t)return;const k=STEPS[S.step]?.k||'';if(/^s\d$/.test(k)){const r=remaining();t.textContent=r===null?'':(r>0?'⏱ '+fmt(r):'⏱ 時間到')}else t.textContent=''},500);
+setInterval(()=>{const t=$('timer');if(!t)return;const k=STEPS[S.step]?.k||'';let txt='',cls='';
+ if(shareStep!==S.step)shareEnd=null;
+ if(/^s\d$/.test(k)&&!S.revealed){const r=remaining();if(r!==null){if(r>0){txt='⏱ 討論 '+fmt(r);cls=r<=30?'warn':''}else{txt='⏰ 討論時間到';cls='over'}}}
+ if(/^s\d$/.test(k)&&S.revealed&&shareEnd){const r=Math.max(0,Math.ceil((shareEnd-Date.now())/1000));if(r>0){txt='🗣 分享 '+fmt(r);cls=r<=10?'warn':'share'}else{txt='⏰ 分享時間到';cls='over'}}
+ t.textContent=txt;t.className='timer '+cls;const sb=$('share');if(sb)sb.textContent=shareEnd?'重新計時 1 分鐘':'▶ 分享計時 1 分鐘'},500);
 
 /* ---------- pop-up & download ---------- */
 async function openPop(hostEl,type,g){
@@ -404,12 +420,12 @@ const leverCards=()=>`<div class="levers">${['m','it','e'].map(k=>`<div class="l
  <div class="lv ban"><b>或者：全面禁用</b>不投任何資源，公司內禁止用 AI（選了就不能再投點）</div></div>`;
 
 /* ---------- HOST (big screen) ---------- */
-let qrDone=false,resetArmed=false;
+const seenOk=new Set();let qrDone=false,resetArmed=false;
 function renderHost(){
  const k=STEPS[S.step].k,st=$('stage'),groups=[...Array(GROUPS)].map((_,i)=>i+1);
  const count=g=>(S.players.find(p=>p.group_no===g)||{}).n||0,total=S.players.reduce((a,p)=>a+p.n,0);
  $('stepname').textContent=`${S.step+1} / ${STEPS.length}・${STEPS[S.step].name}`;
- $('prev').disabled=S.step===0;$('reveal').hidden=!/^s\d$/.test(k)||S.revealed;$('next').disabled=S.step===STEPS.length-1;
+ $('prev').disabled=S.step===0;$('reveal').hidden=!/^s\d$/.test(k)||S.revealed;$('share').hidden=!/^s\d$/.test(k)||!S.revealed;$('next').disabled=S.step===STEPS.length-1;
  if(S.error)$('err').textContent=S.error;else $('err').textContent='';
  if(k!=='join')qrDone=false;
  if(k==='join'){
@@ -429,16 +445,17 @@ function renderHost(){
     <p class="rsub">每題有 ${dots('k',3)} <b>3 點資源</b>，投給你們覺得最該先做的事</p></div>
    <div class="rlev">${['m','it','e'].map(k=>`<div class="lv ${k}"><b>${LEVER[k]}</b>${LEVER_DESC[k]}</div>`).join('')}
     <div class="ror">或</div><div class="lv ban"><b>全面禁用</b>不投任何資源，公司內禁止用 AI<small>選了就不能再投點</small></div></div>
-   <div class="rex"><span class="sl">投法範例</span><span class="chip">主管 ${dots('m',2)}</span><span class="chip">IT ${dots('it',1)}</span><span class="chip">員工 ${dots('e',0)}</span><span class="co">也可以 3 點全押同一個</span></div>
-   <ol class="rsteps"><li><i>1</i><b>組內討論</b>每題 4 分鐘</li><li><i>2</i><b>手機送出</b>任一人送出就好，送出就鎖定</li><li><i>3</i><b>揭曉風格</b>三題結束後，看你們是哪種決策者</li></ol>
+   <div class="rex"><span class="sl">投法範例</span><span class="chip">主管 ${dots('m',2)}</span><span class="chip">IT ${dots('it',1)}</span><span class="chip">高手 ${dots('e',0)}</span><span class="co">也可以 3 點全押同一個</span></div>
+   <ol class="rsteps"><li><i>1</i><b>組內討論</b>每題 4 分鐘</li><li><i>2</i><b>手機送出</b>任一人送出就好，送出就鎖定</li><li><i>3</i><b>輪流分享</b>揭曉後每組 1 分鐘，說說為什麼這樣投</li><li><i>4</i><b>揭曉風格</b>三題結束後，看你們是哪種決策者</li></ol>
    <div class="co" style="text-align:center">沒有標準答案，也不打分數</div></div>`;
  }
  const sm=k.match(/^s(\d)$/);
  if(sm){const i=+sm[1];
   const gs=activeGroups();
-  st.innerHTML=`<div class="eyebrow">情境 ${i+1} / 3</div>${scenarioCard(SC[i])}
-   ${S.revealed?`<div class="ans">${gs.map(g=>ansRow(g,i,true)).join('')}</div>`
-   :`<div class="groups">${gs.map(g=>{const ok=!!subOf(g,i);return `<div class="g ${ok?'ok':''}"><b>第 ${g} 組</b>${ok?'已送出 ✓':'討論中…'}</div>`}).join('')}</div>`}`;
+  if(S.revealed)st.innerHTML=`<div class="eyebrow">情境 ${i+1} / 3・結果揭曉</div><h2>📊 ${SC[i].title}</h2>
+   <div class="ans wide">${gs.map(g=>ansRow(g,i,true)).join('')}</div>`;
+  else st.innerHTML=`<div class="eyebrow">情境 ${i+1} / 3</div>${scenarioCard(SC[i])}
+   <div class="groups live">${gs.map(g=>{const ok=!!subOf(g,i),id=i+'-'+g,fresh=ok&&!seenOk.has(id);if(ok)seenOk.add(id);return `<div class="g ${ok?'ok':''} ${fresh?'new':''}"><b>第 ${g} 組</b>${ok?'已送出 ✓':'討論中…'}</div>`}).join('')}</div>`;
  }
  if(k==='reveal'){const gs=activeGroups();
   st.innerHTML=`<div class="eyebrow">決策風格揭曉・點角色看圖卡</div><h2>你們這組是哪一種 AI 決策者？</h2>
@@ -447,7 +464,7 @@ function renderHost(){
  }
  if(k==='clue'){const gs=activeGroups();
   st.innerHTML=`<div class="eyebrow">論文觀點</div><h2>HERO 需要三方一起撐</h2>
-   <div class="scard"><p style="margin:0;line-height:1.75">《Empowered》的「HERO 契約」：員工想用新科技解決問題，需要<b>主管撐腰</b>、<b>IT 鋪路</b>、<b>員工互相帶動</b>，三方缺一不可。先押哪一方沒有標準答案，重要的是另外兩方怎麼補上。</p></div>
+   <div class="scard"><p style="margin:0;line-height:1.75">《Empowered》的「HERO 契約」：員工想用新科技解決問題，需要<b>主管撐腰</b>、<b>IT 鋪路</b>、<b>高手帶路</b>（同事互相帶動），三方缺一不可。先押哪一方沒有標準答案，重要的是另外兩方怎麼補上。</p></div>
    ${sumTable(gs)}
    <div class="eyebrow">六種決策風格・點角色看介紹</div>
    <div class="dex">${Object.entries(TYPES).map(([t,T])=>`<button data-intro="${t}" style="background:color-mix(in srgb,${T.bg} 55%,#fff)"><i data-c="${t}"></i><br>${T.name}</button>`).join('')}</div>
@@ -461,16 +478,16 @@ function sumTable(gs){
  const aggCell=a=>{const mx=Math.max(a.m,a.it,a.e),n=a.m+a.it+a.e+a.ban;
   if(!n)return'<div class="co">還沒有資料</div>';
   const top=mx?`最多押「${keys.filter(k=>a[k]===mx).map(k=>NM[k]).join('」「')}」（${mx} 點）`:'全部選了全面禁用';
-  return`<div class="stop">${top}</div><div class="bar">${keys.filter(k=>a[k]).map(k=>`<span class="s-${k}" style="flex:${a[k]}">${{m:'主管',it:'IT',e:'員工'}[k]} ${a[k]}</span>`).join('')}${a.ban?`<span class="s-ban" style="flex:${a.ban*3}">禁用 ${a.ban} 組</span>`:''}</div>`};
+  return`<div class="stop">${top}</div><div class="bar">${keys.filter(k=>a[k]).map(k=>`<span class="s-${k}" style="flex:${a[k]}">${{m:'主管',it:'IT',e:'高手'}[k]} ${a[k]}</span>`).join('')}${a.ban?`<span class="s-ban" style="flex:${a.ban*3}">禁用 ${a.ban} 組</span>`:''}</div>`};
  const mn=Math.min(tot.m,tot.it,tot.e),low=keys.filter(k=>tot[k]===mn).map(k=>`「${NM[k]}」`).join('、');
  return`<div class="sum"><span></span>${SC.map(c=>`<b>${c.short}</b>`).join('')}
   ${gs.map(g=>`<b>第 ${g} 組</b>${SC.map((c,i)=>ansBar(plan(g,i))).join('')}`).join('')}
   <b class="sall">全班</b>${agg.map(a=>`<div class="sall">${aggCell(a)}</div>`).join('')}</div>
-  ${tot.m+tot.it+tot.e+tot.ban?`<div class="ask">📊 三題加總：主管 ${tot.m}・IT ${tot.it}・員工 ${tot.e}・全面禁用 ${tot.ban} 次<br>→ 最少被押的是${low}。如果三方缺一不可，這一方誰來補？</div>`:''}`}
+  ${tot.m+tot.it+tot.e+tot.ban?`<div class="ask">📊 三題加總：主管 ${tot.m}・IT ${tot.it}・高手 ${tot.e}・全面禁用 ${tot.ban} 次<br>→ 最少被押的是${low}。如果三方缺一不可，這一方誰來補？</div>`:''}`}
 function ansBar(p){
  if(p.missing)return'<div class="bar"><span class="s-miss">未送出</span></div>';
  if(p.ban)return'<div class="bar"><span class="s-ban" style="flex:3">全面禁用</span></div>';
- return`<div class="bar">${['m','it','e'].filter(k=>p[k]).map(k=>`<span class="s-${k}" style="flex:${p[k]}">${{m:'主管',it:'IT',e:'員工'}[k]} ${p[k]}</span>`).join('')}</div>`}
+ return`<div class="bar">${['m','it','e'].filter(k=>p[k]).map(k=>`<span class="s-${k}" style="flex:${p[k]}">${{m:'主管',it:'IT',e:'高手'}[k]} ${p[k]}</span>`).join('')}</div>`}
 function ansRow(g,i,withWhy){const p=plan(g,i);return`<div class="arow"><b>第 ${g} 組</b>${ansBar(p)}${withWhy&&p.why&&!p.missing?`<span class="awhy">「${esc(p.why)}」</span>`:''}</div>`}
 function introPop(t){const T=TYPES[t];
  $('pop').innerHTML=`<div class="pop" data-close="1"><div class="in intro" role="dialog" aria-label="${T.name}">
@@ -496,8 +513,8 @@ function renderPlayer(){
  if(k==='join'){ph.innerHTML=`${head}<div class="waiting"><i data-w="BAL"></i><h3>第 ${G} 組報到完成</h3><p>等主持人開始</p></div>${err}`}
  if(k==='rule'){ph.innerHTML=`${head}<h3>你們是公司的決策者<br>每題有 3 點資源，投給最該先做的事</h3>
    ${leverCards()}
-   <div class="box"><span class="t">怎麼玩</span><ol class="flow"><li>每題 4 分鐘，組內討論</li><li><b>任一人</b>送出就好，送出就鎖定</li><li>可附一句理由（選填）</li><li>三題後揭曉你們的決策風格</li></ol></div>
-   <p>例：主管 2、IT 1、員工 0，也可以 3 點全押一個。沒有標準答案</p>${err}`}
+   <div class="box"><span class="t">怎麼玩</span><ol class="flow"><li>每題 4 分鐘，組內討論</li><li><b>任一人</b>送出就好，送出就鎖定</li><li>可附一句理由（選填）</li><li>揭曉後每組輪流分享 1 分鐘</li><li>三題後揭曉你們的決策風格</li></ol></div>
+   <p>例：主管 2、IT 1、高手 0，也可以 3 點全押一個。沒有標準答案</p>${err}`}
  const sm=k.match(/^s(\d)$/);
  if(sm){const i=+sm[1],c=SC[i],sub=subOf(G,i);
   if(draftFor!==i){d={m:0,it:0,e:0,ban:false,why:''};confirming=false;draftFor=i}
@@ -526,6 +543,7 @@ function render(){if(MODE==='host')renderHost();else renderPlayer()}
 document.addEventListener('input',e=>{if(e.target.id==='why'){d.why=e.target.value;const b=$('sub'),h=$('subhint'),left=3-d.m-d.it-d.e;if(b)b.disabled=(!d.ban&&left>0);if(h)h.textContent=(!d.ban&&left>0)?'3 點要用完':''}});
 document.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
  if(MODE==='host'){
+  if(b.id==='share'){shareEnd=Date.now()+SHARE_SECONDS*1000;shareStep=S.step;return}
   if(b.id==='next')return hostGo(S.step+1);
   if(b.id==='prev')return hostGo(S.step-1);
   if(b.id==='reveal'){const r=await api('/api/host',{key:HOST_KEY,action:'reveal'});if(!r.ok)$('err').textContent=r.error||'揭曉失敗';return poll()}
