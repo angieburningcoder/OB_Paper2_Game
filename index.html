@@ -41,6 +41,7 @@ button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outl
 .g{border:2px dashed var(--line);border-radius:12px;padding:10px;text-align:center;font-size:13px;color:var(--muted)}
 .g.ok{border-style:solid;border-color:#9fc77a;background:color-mix(in srgb,var(--green) 55%,#fff);color:var(--ink)}
 .g b{display:block;font:400 16px var(--pixel);color:var(--ink)}
+.groups.live{position:sticky;bottom:-22px;z-index:1;background:var(--glass-strong);border-radius:14px;padding:6px;margin-bottom:-6px}
 .groups.live .g{border-width:3px;animation:breathe 2.2s ease-in-out infinite}
 .groups.live .g.ok{animation:none;box-shadow:0 0 0 4px rgba(159,199,122,.35),0 8px 22px rgba(111,154,63,.35)}
 .groups.live .g.new{animation:okpop .7s cubic-bezier(.2,1.6,.4,1)}
@@ -129,6 +130,12 @@ body.host .g{font-size:.75em}body.host .g b{font-size:1.2em}
 .role{display:flex;gap:8px;align-items:baseline;font-weight:700;line-height:1.5}
 .tag{flex:none;background:var(--lav);border-radius:999px;padding:1px 9px;font-size:.8em;font-weight:700}
 .scbody{display:grid;gap:12px}
+.sb{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:6px}
+.revgrid .sb{display:none}
+.sb figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 10px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.sb svg{width:100%;height:140px}
+.sb figcaption{display:flex;align-items:center;gap:.4em;font-size:.85em;font-weight:700}
+.sb figcaption i{font-style:normal;width:1.4em;height:1.4em;border-radius:50%;background:#4b55a8;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.8em}
 body.host .flist{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 @media (max-width:900px){body.host .flist{grid-template-columns:repeat(2,minmax(0,1fr))}}
 body.host .flist .vk,body.host .flist .vw{display:block}
@@ -191,6 +198,38 @@ ol.flow{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:3px;l
 .traits span{background:rgba(255,255,255,.85);border:1px solid var(--line);border-radius:999px;padding:2px 12px;font-size:.85em}
 .ithink{background:color-mix(in srgb,var(--yellow) 50%,#fff);border-radius:12px;padding:8px 12px}
 .intro .btn{align-self:stretch}
+/* host big reveal: same look as the phone card (blobs, frosted sheet, radar), laid out landscape */
+.pop .in.big{max-width:min(1800px,94vw);height:90vh;max-height:90vh;padding:1em;display:block;overflow:hidden;font-size:clamp(13px,min(1.45vw,2.5vh),34px);box-sizing:border-box}
+.bin{height:100%;box-sizing:border-box;background:rgba(255,255,255,.64);border:2px solid rgba(255,255,255,.95);border-radius:1.4em;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:2.2em;padding:1.3em 1.8em;overflow:auto}
+.big .bl{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.35em;min-height:0}
+.bhead{align-self:stretch;display:flex;justify-content:space-between;color:var(--muted);font-weight:700;font-size:.8em}
+.hero{border-radius:1.5em;padding:.3em;line-height:0;margin-top:.4em;animation:flipin .8s cubic-bezier(.2,1.2,.4,1)}
+.hero canvas{width:30vh;image-rendering:pixelated;animation:bob 1.6s ease-in-out infinite}
+.big .icode{margin-top:.3em}
+.big h3{margin:0;font:900 2.6em/1.15 var(--round)}
+.big .itag{margin:0;font-weight:700;font-size:1.1em;color:#4a5070}
+.btags{display:flex;gap:.5em;flex-wrap:wrap;justify-content:center;margin-top:.2em}
+.btags span{border-radius:999px;padding:.15em .8em;font-weight:700;font-size:.85em}
+.mate{margin-top:auto;align-self:stretch;display:flex;gap:.6em;align-items:center;text-align:left;font-size:.85em;padding-top:.6em}
+.mate .mbox{border-radius:.6em;line-height:0;padding:2px}.mate canvas{width:2.8em;image-rendering:pixelated}
+.mate small{display:block;color:var(--muted)}
+.big .br{display:flex;flex-direction:column;gap:.45em;min-height:0}
+.bt{display:flex;align-items:center;gap:.5em;font-weight:900;font-size:1.05em;margin-top:.3em}
+.bt::before{content:'';width:.3em;height:1.1em;border-radius:.2em;background:var(--tb)}
+.spec{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.5em 1em;align-items:center;color:var(--muted);font-weight:700}
+.spec .on{color:var(--ink)}
+.trk{position:relative;height:.45em;border-radius:1em;background:rgba(43,48,70,.1)}
+.trk i{position:absolute;top:50%;width:1.2em;height:1.2em;border-radius:50%;border:4px solid var(--ink);box-sizing:border-box;transform:translate(-50%,-50%)}
+.pts{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:1em;align-items:center}
+.pts svg{width:100%;max-height:30vh}
+.pbars{display:flex;flex-direction:column;gap:.3em}
+.pbars small{color:var(--muted);font-weight:700;font-size:.72em}
+.pbars .bar{height:1.6em;font-size:.8em;margin-bottom:.2em}
+.bwhy{margin:0;line-height:1.6}
+.big .ithink{margin:0;line-height:1.6}
+.big .acts{margin-top:auto;padding-top:.4em}.big .acts .btn{font-size:.8em;padding:.7em 1em}
+@keyframes flipin{from{transform:perspective(900px) rotateY(90deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.hero,.hero canvas{animation:none}}
 </style></head>
 <body>
 <div id="hostwrap" class="hostwrap">
@@ -231,6 +270,29 @@ const SC=[
    {k:'it',who:'資訊部',say:'把常見問題做成範本和一鍵按鈕，不用自己想怎麼問。',cost:'要 3 個月開發，對手的 AI 客服也是 3 個月後上線'},
    {k:'e',who:'小組長',say:'讓已經很會用的 5 個人當小老師，每人帶一個班。',cost:'這 5 個人手上的案件會變慢，績效受影響'},
    {k:'ban',who:'法遵主管',say:'AI 答錯一次就可能被罰款，先停用。',cost:'對手 3 個月後上線，我們會落後'}]}];
+/* host-only storyboards: indigo line art in the style of the slides' storyboards */
+const SBI='#4b55a8',SBR='#b9594a';
+const sv=b=>`<svg viewBox="0 0 200 120" aria-hidden="true"><g fill="none" stroke="${SBI}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${b}</g></svg>`;
+const txt=(x,y,s,t,c=SBI)=>`<text x="${x}" y="${y}" font-size="${s}" font-weight="900" text-anchor="middle" fill="${c}" stroke="none" font-family="Noto Sans TC,sans-serif">${t}</text>`;
+const spark=(x,y,s)=>`<path d="M${x} ${y-s}Q${x} ${y} ${x+s} ${y}Q${x} ${y} ${x} ${y+s}Q${x} ${y} ${x-s} ${y}Q${x} ${y} ${x} ${y-s}Z" fill="#e6e8f7"/>`;
+const bub=(x,y,w,h)=>`<path d="M${x+6} ${y}h${w-12}q6 0 6 6v${h-12}q0 6 -6 6h${-w+22}l-8 8v-8h-2q-6 0 -6 -6v${-h+12}q0 -6 6 -6z" fill="#fff"/>`;
+const cross=(x,y,w,h)=>`<path d="M${x} ${y}l${w} ${h}M${x+w} ${y}l${-w} ${h}" stroke="${SBR}" stroke-width="3.5"/>`;
+// stick figure, head centre (x,y); arms: down|up|fwd|hush; face: smile|flat|sad|worry
+function guy(x,y,arms='down',face='flat'){
+ const A={down:`M${x} ${y+16}l-12 16M${x} ${y+16}l12 16`,up:`M${x} ${y+16}l-14 -16M${x} ${y+16}l14 -16`,fwd:`M${x} ${y+16}l18 4M${x} ${y+18}l16 10`,hush:`M${x} ${y+16}l-12 16M${x} ${y+16}l9 4l-5 -14`}[arms];
+ const F={smile:`M${x-4} ${y+3}q4 4 8 0`,flat:`M${x-3} ${y+4}h6`,sad:`M${x-4} ${y+6}q4 -4 8 0`,worry:`M${x-4} ${y+5}q2 -2 4 0t4 0`}[face];
+ return`<circle cx="${x}" cy="${y}" r="9" fill="#fff"/><path d="M${x} ${y+9}v33M${x} ${y+42}l-10 18M${x} ${y+42}l10 18${A}"/><path d="${F}" stroke-width="1.8"/><circle cx="${x-3}" cy="${y-2}" r="1.3" fill="${SBI}" stroke="none"/><circle cx="${x+3}" cy="${y-2}" r="1.3" fill="${SBI}" stroke="none"/>`}
+const warn=x=>`<path d="M${x} 28l20 36h-40z" fill="#fbe9e5" stroke="${SBR}"/>${txt(x,59,20,'!',SBR)}`;
+const SB=[
+ [[sv(`${guy(45,40,'fwd','worry')}<rect x="85" y="20" width="88" height="58" rx="4" fill="#fff"/>${txt(129,57,22,'&lt;/&gt;')}<path d="M129 78v12M113 90h32"/>`),'工程師寫程式卡關'],
+  [sv(`<rect x="18" y="28" width="46" height="60" rx="4" fill="#fff"/>${txt(41,64,16,'&lt;/&gt;')}<path d="M74 58h30M98 52l6 6l-6 6"/><rect x="114" y="12" width="54" height="96" rx="9" fill="#fff"/>${bub(122,30,38,30)}${spark(141,44,8)}${txt(141,92,13,'私人帳號')}`),'貼進手機上的私人 AI'],
+  [sv(`${warn(40)}${warn(100)}${warn(160)}${txt(100,100,22,'外流 ×3',SBR)}`),'一個月外流 3 次']],
+ [[sv(`${guy(50,40,'down','sad')}<path d="M50 50l-3 6l3 8l3 -8z" fill="${SBI}"/>${bub(74,8,76,34)}${txt(112,32,17,'偷懶！')}<rect x="118" y="62" width="50" height="32" rx="3" fill="#fff"/><path d="M110 98h66"/>${spark(143,78,8)}${cross(112,58,62,44)}`),'總監：用 AI 是偷懶'],
+  [sv(`<rect x="22" y="16" width="58" height="80" rx="4" fill="#fff"/><path d="M32 32h30M32 44h38M32 56h34"/>${spark(70,26,7)}<circle cx="62" cy="80" r="11" fill="#e6e8f7"/><path d="M56 80l4 4l8 -8"/>${guy(140,40,'up','smile')}${spark(112,20,6)}${spark(172,24,6)}`),'實習生用 AI 做提案，簽約成功'],
+  [sv(`${guy(60,40,'hush','flat')}${bub(92,10,96,34)}${txt(140,33,16,'熬夜做的…')}<rect x="112" y="64" width="48" height="30" rx="3" stroke-dasharray="5 5"/><path d="M104 98h64" stroke-dasharray="5 5"/>${spark(136,79,7)}`),'被問時說是熬夜做的']],
+ [[sv(`<rect x="50" y="16" width="100" height="66" rx="4" fill="#fff"/>${bub(74,30,52,32)}${spark(100,45,9)}<path d="M100 82v12M82 94h36"/><rect x="128" y="6" width="50" height="22" rx="11" fill="#fbe9e5" stroke="${SBR}"/>${txt(153,22,13,'上線',SBR)}`),'AI 工具上線了'],
+  [sv(`${guy(60,40,'down','worry')}<path d="M50 40a10 10 0 0 1 20 0M50 42q0 10 9 11"/>${bub(92,14,92,40)}${txt(138,40,17,'怎麼問？')}${txt(176,100,26,'?')}`),'客服不知道怎麼問'],
+  [sv(`${guy(55,40,'down','sad')}<path d="M48 26q-2 4 0 6" stroke-width="1.8"/>${bub(96,16,62,40)}${spark(127,33,10)}${cross(98,16,58,34)}<path d="M108 98h64M112 92h56"/>`),'試一次就放棄']]];
 const LEVER={m:'主管撐腰',it:'IT 鋪路',e:'高手帶路'};
 const LEVER_DESC={m:'主管公開說「可以用」、訂使用守則、出錯主管扛',it:'導入公司核准、資料不外流的 AI 工具',e:'讓會用的人教大家：分享 prompt、辦讀書會'};
 const ASK='👉 每組有 <b>3 點</b>，投給前三個提案；或選全面禁用（選了就不能投點）';
@@ -406,10 +468,44 @@ setInterval(()=>{const t=$('timer');if(!t)return;const k=STEPS[S.step]?.k||'';le
  t.textContent=txt;t.className='timer '+cls;const sb=$('share');if(sb)sb.textContent=shareEnd?'重新計時 1 分鐘':'▶ 分享計時 1 分鐘'},500);
 
 /* ---------- pop-up & download ---------- */
+const saveCard=(card,type,g)=>card.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`HERO製造機_第${g}組_${TYPES[type].name}.png`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)},'image/png');
 async function openPop(hostEl,type,g){
+ if(MODE==='host')return bigCard(hostEl,type,g);
  const card=await makeCard(type,g),url=card.toDataURL('image/png');
  hostEl.innerHTML=`<div class="pop" data-close="1"><div class="in" role="dialog" aria-label="決策風格圖卡"><img src="${url}" alt="第 ${g} 組：${TYPES[type].name}"><div class="acts"><button class="btn" data-dl="1">下載圖卡</button><button class="btn ghost" data-close="1">關閉</button></div><p class="hint">手機也可以長按圖片儲存</p></div></div>`;
- hostEl.querySelector('[data-dl]').onclick=()=>card.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`HERO製造機_第${g}組_${TYPES[type].name}.png`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)},'image/png');
+ hostEl.querySelector('[data-dl]').onclick=()=>saveCard(card,type,g);
+}
+// Host: landscape full-screen reveal, sized for the projector (the portrait PNG is only for download)
+// Radar of the 9 points over three levers, same geometry as the phone card
+function radarSVG(S,T){
+ const R=90,ang=[-90,30,150].map(a=>a*Math.PI/180),keys=['m','it','e'];
+ const pt=(k,s)=>`${(Math.cos(ang[k])*R*s).toFixed(1)},${(Math.sin(ang[k])*R*s).toFixed(1)}`;
+ const tri=s=>`<polygon points="${[0,1,2].map(k=>pt(k,s)).join(' ')}" fill="none" stroke="rgba(43,48,70,.15)" stroke-width="2"/>`;
+ return`<svg viewBox="-190 -168 380 330" aria-label="點數分配雷達圖">${[1/3,2/3,1].map(tri).join('')}
+  ${[0,1,2].map(k=>`<line x1="0" y1="0" x2="${pt(k,1).replace(',','" y2="')}" stroke="rgba(43,48,70,.15)" stroke-width="2"/>`).join('')}
+  <polygon points="${keys.map((kk,k)=>pt(k,Math.max(.06,S.t[kk]/9))).join(' ')}" fill="${T.bg}" fill-opacity=".85" stroke="#2b3046" stroke-width="3.5" stroke-linejoin="round"/>
+  ${keys.map((kk,k)=>{const[x,y]=pt(k,1.3).split(',');return`<text x="${x}" y="${y}" text-anchor="middle" font-size="25" font-weight="900" fill="#2b3046">${NM[kk]}</text><text x="${x}" y="${+y+28}" text-anchor="middle" font-size="22" font-weight="700" fill="#6c7290">${S.t[kk]} 點</text>`}).join('')}</svg>`}
+// Host: landscape full-screen reveal, sized for the projector (the portrait PNG is only for download)
+function bigCard(hostEl,type,g){
+ const T=TYPES[type],S=stats(g),M=TYPES[T.mate];
+ const spec=[['放手開放','謹慎守門',S.caution],['雨露均霑','集中火力',S.focus],['堅持路線','隨機應變',S.adapt]];
+ const bg=`radial-gradient(45% 45% at 10% 12%,${T.bg},transparent 70%),radial-gradient(40% 40% at 92% 15%,rgba(171,216,240,.65),transparent 70%),radial-gradient(45% 45% at 88% 90%,rgba(207,227,166,.65),transparent 70%),radial-gradient(40% 40% at 10% 88%,rgba(251,224,160,.7),transparent 70%),#f6f7fb`;
+ hostEl.innerHTML=`<div class="pop" data-close="1"><div class="in big" role="dialog" aria-label="第 ${g} 組：${T.name}" style="background:${bg};--tb:${T.bg}"><div class="bin">
+  <div class="bl"><div class="bhead"><span>HERO 製造機・AI 決策風格測驗</span><span>第 ${g} 組</span></div>
+   <div class="hero" style="background:${T.bg}"><i data-c="${type}" data-u="12"></i></div>
+   <div class="icode">TYPE ${T.code}</div><h3>${T.name}</h3><p class="itag">「${T.tag}」</p>
+   <div class="btags">${T.traits.map((x,i)=>`<span style="background:${['#f6d0c8','#cde6f5','#dfedc4'][i]}">#${x}</span>`).join('')}</div>
+   <div class="mate"><span class="mbox" style="background:${M.bg}"><i data-c="${T.mate}" data-u="3"></i></span><div><b>最佳拍檔：${M.name}</b><small>${M.tag}</small></div></div></div>
+  <div class="br">
+   <div class="bt">你們的風格光譜</div>
+   <div class="spec">${spec.map(([l,r,v])=>`<span class="${v<=.5?'on':''}">${l}</span><div class="trk"><i style="left:${Math.max(0,Math.min(1,v))*100}%;background:${T.bg}"></i></div><span class="${v>=.5?'on':''}">${r}</span>`).join('')}</div>
+   <div class="bt">點數都押在哪裡</div>
+   <div class="pts">${radarSVG(S,T)}<div class="pbars">${S.ps.map((p,i)=>`<small>情境 ${i+1}・${SC[i].short}</small>${ansBar(p)}`).join('')}</div></div>
+   <div class="bt">為什麼是你們</div>
+   <p class="bwhy"><b>${whyLine(type,S)}</b><br>${T.paper}</p><p class="ithink">🤔 ${T.think}</p>
+   <div class="acts"><button class="btn" data-dl="1">下載圖卡</button><button class="btn ghost" data-close="1">關閉</button></div></div></div></div></div>`;
+ hostEl.querySelectorAll('[data-c]').forEach(e=>e.replaceWith(charCanvas(e.dataset.c,+e.dataset.u)));
+ hostEl.querySelector('[data-dl]').onclick=async()=>saveCard(await makeCard(type,g),type,g);
 }
 document.addEventListener('click',e=>{const cl=e.target.closest('[data-close]');if(cl&&(e.target===cl||cl.tagName==='BUTTON')){$('pop').innerHTML=''}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$('pop').innerHTML=''});
@@ -417,7 +513,8 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')$('pop').innerHTML='
 /* ---------- shared stage pieces ---------- */
 function scenarioCard(c){return `<div class="scard"><div><h3>${c.title}</h3><div class="co">${c.co}</div></div>
  <div class="role"><span class="tag">你是</span>${c.role}</div>
- <div class="scbody"><div><div class="sl">發生什麼事</div>${c.story.map(t=>`<p class="story">${t}</p>`).join('')}</div>
+ <div class="scbody"><div><div class="sl">發生什麼事</div>${c.story.map(t=>`<p class="story">${t}</p>`).join('')}
+  ${MODE==='host'?`<div class="sb">${SB[SC.indexOf(c)].map(([s,cap],j)=>`<figure>${s}<figcaption><i>${j+1}</i>${cap}</figcaption></figure>`).join('')}</div>`:''}</div>
   <div><div class="sl">四個提案</div><ul class="flist">${c.voices.map(v=>`<li class="${v.k}"><span class="vk">${NM[v.k]}</span><b class="vw">${v.who}</b>「${v.say}」<small>代價：${v.cost}</small></li>`).join('')}</ul></div></div>
  <div class="ask">${ASK}</div></div>`}
 const leverCards=()=>`<div class="levers">${['m','it','e'].map(k=>`<div class="lv ${k}"><b>${LEVER[k]}</b>${LEVER_DESC[k]}</div>`).join('')}
@@ -460,6 +557,7 @@ function renderHost(){
    <div class="revgrid">${scenarioCard(SC[i])}<div class="ans wide">${gs.map(g=>ansRow(g,i,true)).join('')}</div></div>`;
   else st.innerHTML=`<div class="eyebrow">情境 ${i+1} / 3</div>${scenarioCard(SC[i])}
    <div class="groups live">${gs.map(g=>{const ok=!!subOf(g,i),id=i+'-'+g,fresh=ok&&!seenOk.has(id);if(ok)seenOk.add(id);return `<div class="g ${ok?'ok':''} ${fresh?'new':''}"><b>第 ${g} 組</b>${ok?'已送出 ✓':'討論中…'}</div>`}).join('')}</div>`;
+  fitSB();
  }
  if(k==='reveal'){const gs=activeGroups();
   st.innerHTML=`<div class="eyebrow">決策風格揭曉・點角色看圖卡</div><h2>你們這組是哪一種 AI 決策者？</h2>
@@ -549,6 +647,15 @@ function renderPlayer(){
  ph.querySelectorAll('[data-w]').forEach(e=>e.replaceWith(charCanvas(e.dataset.w,+e.dataset.u||5)));
 }
 
+// Storyboard only takes the stage's leftover height; hidden when the screen is too short
+function fitSB(){
+ const st=$('stage'),sb=st.querySelector('.sb');if(!sb)return;
+ const svgs=sb.querySelectorAll('svg');sb.style.display='';svgs.forEach(s=>s.style.height='0');
+ const cs=getComputedStyle(st),kids=[...st.children];
+ const used=kids.reduce((a,e)=>a+e.offsetHeight,0)+parseFloat(cs.rowGap)*(kids.length-1)+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom);
+ const h=Math.min(220,st.clientHeight-used-4);
+ if(h<56)sb.style.display='none';else svgs.forEach(s=>s.style.height=h+'px')}
+window.addEventListener('resize',()=>{if(MODE==='host')fitSB()});
 function render(){if(MODE==='host')renderHost();else renderPlayer()}
 
 /* ---------- events ---------- */
