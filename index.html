@@ -483,11 +483,19 @@ function sumTable(gs){
   if(!n)return'<div class="co">還沒有資料</div>';
   const top=mx?`最多押「${keys.filter(k=>a[k]===mx).map(k=>NM[k]).join('」「')}」（${mx} 點）`:'全部選了全面禁用';
   return`<div class="stop">${top}</div><div class="bar">${keys.filter(k=>a[k]).map(k=>`<span class="s-${k}" style="flex:${a[k]}">${{m:'主管',it:'IT',e:'高手'}[k]} ${a[k]}</span>`).join('')}${a.ban?`<span class="s-ban" style="flex:${a.ban*3}">禁用 ${a.ban} 組</span>`:''}</div>`};
- const mn=Math.min(tot.m,tot.it,tot.e),low=keys.filter(k=>tot[k]===mn).map(k=>`「${NM[k]}」`).join('、');
+ const LB={m:'「主管撐腰」',it:'「IT 鋪路」',e:'「高手帶路」（員工）'},
+  GAP={m:'沒有主管給清楚規則、不懲罰試錯，員工還是不敢說出來（52% 不願承認在用 AI）',it:'沒有安全的企業版 AI，員工只能繼續用私人帳號，風險公司看不到',e:'沒有員工站出來分享 prompt，個人技巧變不成團隊知識'};
+ const pts=tot.m+tot.it+tot.e,mn=Math.min(tot.m,tot.it,tot.e),low=keys.filter(k=>tot[k]===mn),zero=keys.filter(k=>!tot[k]),lines=[];
+ if(tot.ban)lines.push(pts?`有 ${tot.ban} 次選全面禁用：那幾題的員工，可能正變成更地下的 Secret Cyborg。`:'三題都選全面禁用。禁用後員工不是放棄不用，就是改用私人帳號藏得更深，沒有人會變成 HERO。');
+ if(pts){
+  if(low.length===3)lines.push('三方押得一樣多，符合 HERO 協定「三方缺一不可」。下一步：哪一方先動，另外兩方才接得上？');
+  else if(zero.length)lines.push(`完全沒人押${zero.map(k=>LB[k]).join('、')}，HERO 協定 2.0 少了${zero.length>1?'兩角':'一角'}：${zero.map(k=>GAP[k]).join('；')}。${zero.length>1?'這兩方':'這一方'}誰來補？`);
+  else if(low.length===1)lines.push(`最少被押的是${LB[low[0]]}：${GAP[low[0]]}。如果三方缺一不可，這一方誰來補？`);
+  else lines.push(`大家主要押${LB[keys.find(k=>tot[k]!==mn)]}，${low.map(k=>LB[k]).join('、')}相對少。只靠一方，Secret Cyborg 變不成 HERO。`)}
  return`<div class="sum"><span></span>${SC.map(c=>`<b>${c.short}</b>`).join('')}
   ${gs.map(g=>`<b>第 ${g} 組</b>${SC.map((c,i)=>ansBar(plan(g,i))).join('')}`).join('')}
   <b class="sall">全班</b>${agg.map(a=>`<div class="sall">${aggCell(a)}</div>`).join('')}</div>
-  ${tot.m+tot.it+tot.e+tot.ban?`<div class="ask">📊 三題加總：主管 ${tot.m}・IT ${tot.it}・高手 ${tot.e}・全面禁用 ${tot.ban} 次<br>→ 最少被押的是${low}。如果三方缺一不可，這一方誰來補？</div>`:''}`}
+  ${pts+tot.ban?`<div class="ask">📊 三題加總：主管 ${tot.m}・IT ${tot.it}・高手（員工）${tot.e}・全面禁用 ${tot.ban} 次${lines.map(l=>`<br>→ ${l}`).join('')}</div>`:''}`}
 function ansBar(p){
  if(p.missing)return'<div class="bar"><span class="s-miss">未送出</span></div>';
  if(p.ban)return'<div class="bar"><span class="s-ban" style="flex:3">全面禁用</span></div>';
