@@ -85,7 +85,7 @@ textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-ra
 .pop .hint{font-size:12px;color:var(--muted);text-align:center;margin:0}
 .phone .pop{position:absolute;border-radius:24px}
 @keyframes popin{from{transform:scale(.6);opacity:0}}
-@media (prefers-reduced-motion:reduce){.waiting canvas,.pop .in{animation:none}.who{transition:none}}
+@media (prefers-reduced-motion:reduce){.waiting canvas,.sil canvas,.pop .in{animation:none}.who{transition:none}}
 
 html,body{height:100%}
 .hostwrap{height:100vh;display:flex;flex-direction:column;gap:12px;padding:16px;box-sizing:border-box}
@@ -103,6 +103,11 @@ body.host .g{font-size:.75em}body.host .g b{font-size:1.2em}
 .errline{color:var(--red-ink);font-size:13px;margin:0}
 .qrbox{background:#fff;padding:12px;border-radius:14px;line-height:0;min-width:120px;min-height:120px}
 .url{font-weight:700;margin-top:8px}
+.cover{margin:auto;display:flex;gap:clamp(24px,3vw,48px);align-items:stretch;flex-wrap:wrap;justify-content:center}
+.cside{display:flex;flex-direction:column;justify-content:space-between;gap:16px}
+.sil{display:grid;grid-template-columns:repeat(6,auto);gap:10px}
+.sil canvas{width:clamp(72px,8vw,130px);image-rendering:pixelated;animation:bob 1.6s ease-in-out infinite}
+.sil canvas:nth-child(2n){animation-delay:-.8s}.sil canvas:nth-child(3n){animation-delay:-.4s}
 .lineup{flex:none;align-items:start}
 /* scenario card */
 .scard .co{color:var(--muted);font-size:.85em;margin-top:2px}
@@ -388,13 +393,14 @@ function renderHost(){
  if(S.error)$('err').textContent=S.error;else $('err').textContent='';
  if(k!=='join')qrDone=false;
  if(k==='join'){
-  st.innerHTML=`<div class="eyebrow">換你們當決策者</div><h2>掃碼選組，測出你們這組的「AI 決策風格」</h2>
-   <div class="row" style="flex:1"><div id="qr" class="qrbox"></div><div><div class="big">${total}</div><div style="color:var(--muted)">人已加入</div>
-   <div class="url">${location.host}</div><div style="color:var(--muted);font-size:.85em;margin-top:6px">遊戲設計｜筱于</div></div>
-   <div class="row" style="gap:6px" id="sil"></div></div>
+  st.innerHTML=`<div class="eyebrow" style="text-align:center">換你們當決策者</div><h2 style="text-align:center">掃碼選組，測出你們這組的「AI 工具應用導入決策風格」</h2>
+   <div class="cover"><div id="qr" class="qrbox"></div>
+    <div class="cside"><div><div class="big">${total}</div><div style="color:var(--muted)">人已加入</div>
+    <div class="url">${location.host}</div><div style="color:var(--muted);font-size:.85em;margin-top:6px">遊戲設計｜筱于</div></div>
+    <div class="sil" id="sil"></div></div></div>
    <div class="groups">${groups.map(g=>`<div class="g ${count(g)?'ok':''}"><b>第 ${g} 組</b>${count(g)} 人</div>`).join('')}</div>`;
-  ['GRD','BLD','CAP','MEN','BAL','EXP'].forEach(t=>{const c=charCanvas(t,3);c.style.cssText='width:60px;image-rendering:pixelated;opacity:.85';$('sil').appendChild(c)});
-  if(window.QRCode){new QRCode($('qr'),{text:location.origin+'/',width:220,height:220,colorDark:'#2b3046',colorLight:'#ffffff'})}
+  ['GRD','BLD','CAP','MEN','BAL','EXP'].forEach(t=>{$('sil').appendChild(charCanvas(t,5))});
+  if(window.QRCode){new QRCode($('qr'),{text:location.origin+'/',width:360,height:360,colorDark:'#2b3046',colorLight:'#ffffff'})}
   else $('qr').textContent=location.origin;
  }
  if(k==='rule'){
