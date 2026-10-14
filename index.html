@@ -46,12 +46,11 @@ button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outl
 .groups.live .g.new{animation:okpop .7s cubic-bezier(.2,1.6,.4,1)}
 @keyframes breathe{50%{border-color:var(--accent);background:rgba(91,143,214,.1)}}
 @keyframes okpop{0%{transform:scale(.85)}60%{transform:scale(1.08)}}
-.revgrid{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-body.host .revgrid .flist{grid-template-columns:repeat(2,minmax(0,1fr))}
+.revgrid{display:flex;flex-direction:column;gap:14px}
 .revgrid .ask{display:none}
-.revgrid .scard{font-size:.88em}
-.revgrid .ans.wide{align-self:stretch}
-.ans.wide{flex:1;justify-content:center;gap:18px;margin-top:0}.ans.wide .bar{height:3em;font-size:1.1em}.ans.wide .arow>b{font-size:1.15em}.ans.wide .awhy{font-size:1em}
+.revgrid .scard{font-size:.9em}
+.ans.wide{gap:10px;margin-top:0}.ans.wide .arow{grid-template-columns:5em minmax(0,1.4fr) minmax(0,1fr)}.ans.wide .bar{height:2.2em}.ans.wide .awhy{grid-column:3;font-size:.9em;line-height:1.4}
+@media (max-height:800px){.revgrid{gap:8px}.revgrid .scard{font-size:.78em;padding:10px 16px;gap:6px}.ans.wide{gap:6px}.ans.wide .bar{height:1.8em}}
 .lineup{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;flex:1}
 @media (max-width:700px){.lineup{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .who{border:0;border-radius:16px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font-family:var(--round);color:var(--ink);text-align:center;transition:transform .2s}
