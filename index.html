@@ -135,6 +135,26 @@ body.host .flist .vk{font-size:1.05em;font-weight:900;color:var(--ink);letter-sp
 .lv b{display:block;font-size:1.15em;margin-bottom:2px}
 .lv.m{background:color-mix(in srgb,var(--red) 40%,#fff)}.lv.it{background:color-mix(in srgb,var(--blue) 40%,#fff)}.lv.e{background:color-mix(in srgb,var(--green) 50%,#fff)}.lv.ban{background:#eceef3;color:var(--muted)}.lv.ban b{color:var(--ink)}
 .phone .levers{grid-template-columns:minmax(0,1fr);gap:6px}.phone .lv{font-size:13px}
+/* host rule page */
+.rule{flex:1;display:flex;flex-direction:column;justify-content:space-evenly;gap:20px;font-size:1.15em}
+.rhead{text-align:center;display:flex;flex-direction:column;gap:6px}
+.rsub{margin:0;font-size:1.2em}
+.dots{display:inline-flex;gap:.25em;vertical-align:middle}
+.dot{width:.8em;height:.8em;border-radius:50%;border:2px solid var(--line);box-sizing:border-box}
+.dot.k{background:var(--ink);border-color:var(--ink)}.dot.m{background:var(--red-ink);border-color:var(--red-ink)}.dot.it{background:var(--blue-ink);border-color:var(--blue-ink)}.dot.e{background:#6f9a3f;border-color:#6f9a3f}
+.rlev{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto minmax(0,1fr);gap:12px;align-items:stretch}
+.rlev .lv{padding:20px 22px;font-size:1em;line-height:1.6}
+.rlev .lv b{font-size:1.4em;margin-bottom:6px}
+.rlev .lv.ban{border:2px dashed #c3c8d3;background:transparent}
+.rlev .lv small{display:block;margin-top:6px;font-size:.85em}
+.ror{align-self:center;font-weight:900;color:var(--muted)}
+.rex{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.rex .sl{margin:0}
+.chip{display:inline-flex;align-items:center;gap:.5em;background:var(--glass-strong);border:1px solid var(--line);border-radius:999px;padding:4px 14px;font-weight:700}
+.rsteps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.rsteps li{background:var(--glass-strong);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;color:var(--muted);line-height:1.5}
+.rsteps i{grid-row:span 2;width:2em;height:2em;border-radius:50%;background:var(--ink);color:#fff;font-style:normal;font-weight:900;display:flex;align-items:center;justify-content:center}
+.rsteps b{color:var(--ink);font-size:1.15em}
 ol.flow{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:3px;line-height:1.6}
 .phone ol.flow{font-size:13px}
 /* answer bars */
@@ -404,11 +424,14 @@ function renderHost(){
   else $('qr').textContent=location.origin;
  }
  if(k==='rule'){
-  st.innerHTML=`<div class="eyebrow">遊戲規則</div><h2>你們是公司的決策者<br>每題有 3 點資源，投給你們覺得最該先做的事</h2>
-   ${leverCards()}
-   <div class="scard"><div><b>怎麼投：</b>例如「主管 2、IT 1、員工 0」，也可以 3 點全押同一個</div>
-    <ol class="flow"><li>每題 4 分鐘，組內討論</li><li>任一人用手機送出（送出就鎖定）</li><li>三題結束後，揭曉你們這組的決策風格</li></ol>
-    <div class="co">沒有標準答案，也不打分數</div></div>`;
+  const dots=(k,n)=>`<span class="dots">${[0,1,2].map(j=>`<i class="dot ${j<n?k:''}"></i>`).join('')}</span>`;
+  st.innerHTML=`<div class="rule"><div class="rhead"><div class="eyebrow">遊戲規則</div><h2>你們是公司的決策者</h2>
+    <p class="rsub">每題有 ${dots('k',3)} <b>3 點資源</b>，投給你們覺得最該先做的事</p></div>
+   <div class="rlev">${['m','it','e'].map(k=>`<div class="lv ${k}"><b>${LEVER[k]}</b>${LEVER_DESC[k]}</div>`).join('')}
+    <div class="ror">或</div><div class="lv ban"><b>全面禁用</b>不投任何資源，公司內禁止用 AI<small>選了就不能再投點</small></div></div>
+   <div class="rex"><span class="sl">投法範例</span><span class="chip">主管 ${dots('m',2)}</span><span class="chip">IT ${dots('it',1)}</span><span class="chip">員工 ${dots('e',0)}</span><span class="co">也可以 3 點全押同一個</span></div>
+   <ol class="rsteps"><li><i>1</i><b>組內討論</b>每題 4 分鐘</li><li><i>2</i><b>手機送出</b>任一人送出就好，送出就鎖定</li><li><i>3</i><b>揭曉風格</b>三題結束後，看你們是哪種決策者</li></ol>
+   <div class="co" style="text-align:center">沒有標準答案，也不打分數</div></div>`;
  }
  const sm=k.match(/^s(\d)$/);
  if(sm){const i=+sm[1];
